@@ -1,7 +1,13 @@
 import React from 'react'
+import { AuthorizationForm } from '@components/index'
+import { Container } from '@mui/material'
 
 const Authorization: React.FC = () => {
-	return <div>Authorization</div>
+	return (
+		<Container>
+			<AuthorizationForm />
+		</Container>
+	)
 }
 
 export default Authorization
