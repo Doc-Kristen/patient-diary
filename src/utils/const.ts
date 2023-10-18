@@ -1,3 +1,5 @@
+const BACKEND_URL = 'http://localhost:3000'
+
 enum AppRoute {
 	Main = '/',
 	Patient = 'patient',
@@ -6,4 +8,10 @@ enum AppRoute {
 	NotFound = '*',
 }
 
-export { AppRoute }
+enum Status {
+	LOADING = 'loading',
+	SUCCESS = 'success',
+	ERROR = 'error',
+}
+
+export { AppRoute, Status, BACKEND_URL }
