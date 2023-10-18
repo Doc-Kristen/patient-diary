@@ -1,5 +1,6 @@
 export { default as Header } from './Header'
-export { default as AuthorizationForm } from './AuthorizationForm'
+export { default as SignIn } from './SignIn'
+export { default as SignUp } from './SignUp'
 export { default as HealthJournal } from './HealthJournal'
 export { default as FormJournal } from './HealthJournal'
 export { default as Modal } from './Modal'

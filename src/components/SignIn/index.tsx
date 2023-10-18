@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import MonitorHeart from '@mui/icons-material/MonitorHeart'
 
-const AuthorizationForm: React.FC = () => {
+const SignIn: React.FC = () => {
 	const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const data = new FormData(event.currentTarget)
@@ -86,4 +86,4 @@ const AuthorizationForm: React.FC = () => {
 	)
 }
 
-export default AuthorizationForm
+export default SignIn
