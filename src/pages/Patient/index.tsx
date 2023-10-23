@@ -1,21 +1,30 @@
 import React from 'react'
-import { HealthJournal } from '@components/index'
-import { Container } from '@mui/material'
+import { useParams } from 'react-router-dom'
+import { FormJournal, HealthJournal, Modal } from '@components/index'
+import { Button, Container, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
-import { selectJournal} from '@store/journal/selectors'
+import { selectJournalData, selectJournalStatus } from '@store/journal/selectors'
 import { Status } from '@utils/const'
 import { useAppDispatch } from '@store/store'
 import { fetchJournal } from '@store/journal/asyncActions'
 
 const Patient: React.FC = () => {
-	const dispatch = useAppDispatch();
-	const { data, status } = useSelector(selectJournal)
+	const dispatch = useAppDispatch()
+	const { id } = useParams()
+	const userId = id || ''
+
+	const data = useSelector(selectJournalData)
+
+	const status = useSelector(selectJournalStatus)
+
+	const [isOpen, setIsOpen] = React.useState(false)
+	const handleOpen = () => setIsOpen(true)
 
 	React.useEffect(() => {
-		dispatch(fetchJournal())
-	}, [dispatch])
+		dispatch(fetchJournal(userId))
+	}, [dispatch, id, userId])
 
-	if (status === Status.LOADING) {
+	if (status === Status.PENDING) {
 		return <div>Loading...</div>
 	}
 
@@ -32,7 +41,21 @@ const Patient: React.FC = () => {
 				gap: '10px',
 				justifyContent: 'center',
 			}}>
-			<HealthJournal healthData={data} />
+			{data.length > 0 ? (
+				<HealthJournal healthData={data} />
+			) : (
+				<Typography>
+					Сохраненные записи не найдены. Добавьте запись, чтобы начать вести дневник.
+				</Typography>
+			)}
+			{isOpen && (
+				<Modal title='Добавить запись' isOpen={isOpen} setIsOpen={setIsOpen}>
+					<FormJournal setIsOpen={setIsOpen} id={userId} />
+				</Modal>
+			)}
+			<Button variant='contained' onClick={handleOpen}>
+				Добавить запись
+			</Button>
 		</Container>
 	)
 }

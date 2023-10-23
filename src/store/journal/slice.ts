@@ -1,16 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Status } from '@utils/const'
-import HealthEntry from 'types/HealthEntry'
-import { fetchJournal } from './asyncActions'
+import { HealthEntry } from 'types/HealthJournal'
+import { createJournalEntry, fetchJournal } from './asyncActions'
 
 interface JournalState {
 	data: HealthEntry[]
-	status: Status
+	dataStatus: Status
+	entryStatus: Status | null
 }
 
 const initialState: JournalState = {
 	data: [] as HealthEntry[],
-	status: Status.LOADING,
+	dataStatus: Status.PENDING,
+	entryStatus: null,
 }
 
 const journalSlice = createSlice({
@@ -23,15 +25,25 @@ const journalSlice = createSlice({
 	},
 	extraReducers: builder => {
 		builder.addCase(fetchJournal.pending, state => {
-			state.status = Status.LOADING
+			state.dataStatus = Status.PENDING
 		})
 		builder.addCase(fetchJournal.fulfilled, (state, action) => {
-			state.status = Status.SUCCESS
+			state.dataStatus = Status.SUCCESS
 			state.data = action.payload
+
 		})
 		builder.addCase(fetchJournal.rejected, state => {
-			state.status = Status.ERROR
+			state.dataStatus = Status.ERROR
 			state.data = []
+		})
+		builder.addCase(createJournalEntry.pending, state => {
+			state.entryStatus = Status.PENDING
+		})
+		builder.addCase(createJournalEntry.fulfilled, state => {
+			state.entryStatus = Status.SUCCESS
+		})
+		builder.addCase(createJournalEntry.rejected, state => {
+			state.entryStatus = Status.ERROR
 		})
 	},
 })

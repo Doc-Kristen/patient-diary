@@ -1,6 +1,7 @@
 import { Dayjs } from 'dayjs'
 
-type HealthEntry = {
+export type HealthEntry = {
+	id: string
 	datetime: string | Dayjs
 	systolic: number
 	diastolic: number
@@ -10,4 +11,7 @@ type HealthEntry = {
 	[key: string]: string | number | Dayjs | undefined
 }
 
-export default HealthEntry
+export type HealthJournalProps = {
+	healthData: HealthEntry[]
+}
+

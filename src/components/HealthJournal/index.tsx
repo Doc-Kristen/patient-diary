@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { HealthEntry } from 'types/index'
+
 import {
 	Paper,
 	Table,
@@ -10,10 +10,7 @@ import {
 	TablePagination,
 	TableRow,
 } from '@mui/material'
-
-type HealthJournalProps = {
-	healthData: HealthEntry[]
-}
+import { HealthJournalProps } from 'types/HealthJournal'
 
 interface Column {
 	id: string

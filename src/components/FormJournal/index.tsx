@@ -1,82 +1,119 @@
 import React from 'react'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { LocalizationProvider, MobileDateTimePicker } from '@mui/x-date-pickers'
-import { TextField, Stack } from '@mui/material'
-import { HealthEntry } from 'types/index'
+import { useSelector } from 'react-redux'
+import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form'
+import dayjs from 'dayjs'
+// import { v4 as uuidv4 } from 'uuid'
+import { TextField, Stack, Button, Alert } from '@mui/material'
+import { createJournalEntry, fetchJournal } from '@store/journal/asyncActions'
+import { useAppDispatch } from '@store/store'
+import { HealthEntry } from 'types/HealthJournal'
+import { FormFields, Status } from '@utils/const'
+import { selectEntryStatus } from '@store/journal/selectors'
 
 type FormJournalProps = {
-	formData: HealthEntry
-	onChange: (arg: HealthEntry) => void
+	setIsOpen: (arg: boolean) => void
+	id: string
 }
 
-const FormJournal: React.FC<FormJournalProps> = ({ formData, onChange }) => {
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-		const { name, value } = e.target
-		onChange({ ...formData, [name]: value })
-		console.log(e.target)
+// форма для новой записи
+const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
+	const dispatch = useAppDispatch()
+
+	const date = dayjs().format('YYYY-MM-DDTHH:mm')
+	// const fakeId = uuidv4()
+	const REQUIRED_FIELD_MESSAGE = 'Обязательное поле'
+
+	const [isError, setIsError] = React.useState(false)
+
+	const entryStatus = useSelector(selectEntryStatus)
+	const isDisabledForm = entryStatus === Status.PENDING
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<HealthEntry>()
+
+	// настройки для текстовых подсказок в случае ошибки
+	const getErrorSettings = (fieldName: FormFields) => {
+		const error = !!errors[fieldName]
+		const helperText = errors[fieldName] ? errors[fieldName]?.message : ''
+		return { error, helperText }
 	}
+
+	// функция для генерации полей ввода
+	const renderTextField = (
+		id: string,
+		label: string,
+		type: string,
+		fieldName: FormFields,
+		validation: RegisterOptions,
+		defaultValue?: string,
+	) => (
+		<TextField
+			id={id}
+			label={label}
+			type={type}
+			defaultValue={defaultValue || ''}
+			InputLabelProps={{
+				shrink: true,
+			}}
+			{...register(fieldName, validation)}
+			disabled={isDisabledForm}
+			{...getErrorSettings(fieldName)}
+		/>
+	)
+
+	const onSubmit: SubmitHandler<HealthEntry> = async formData => {
+		const response = await dispatch(createJournalEntry({ userId: id, entryData: formData }))
+		if (createJournalEntry.fulfilled.match(response)) {
+			dispatch(fetchJournal(id))
+			setIsOpen(false)
+		} else {
+			setIsError(true) // показ сообщения об ошибке
+			setTimeout(() => {
+				setIsError(false)
+			}, 3000)
+		}
+	}
+
 	return (
-		<form>
+		<form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column' }}>
 			<Stack spacing={2}>
-				<LocalizationProvider dateAdapter={AdapterDayjs}>
-					<MobileDateTimePicker
-						value={formData.datetime}
-						onChange={date => onChange({ ...formData, datetime: date || '' })}
-					/>
-				</LocalizationProvider>
-				<TextField
-					name='systolic'
-					id='systolic'
-					label='АД сист.'
-					type='number'
-					InputProps={{ inputProps: { min: 0 } }}
-					InputLabelProps={{
-						shrink: true,
-					}}
-					onChange={handleInputChange}
-				/>
-				<TextField
-					name='diastolic'
-					id='diastolic'
-					label='АД диаст.'
-					type='number'
-					InputProps={{ inputProps: { min: 0 } }}
-					InputLabelProps={{
-						shrink: true,
-					}}
-					onChange={handleInputChange}
-				/>
-				<TextField
-					name='heartRate'
-					id='heartRate'
-					label='ЧСС'
-					type='number'
-					InputProps={{ inputProps: { min: 0 } }}
-					InputLabelProps={{
-						shrink: true,
-					}}
-					onChange={handleInputChange}
-				/>
-				<TextField
-					name='complaints'
-					id='complaints'
-					label='Жалобы'
-					type='text'
-					InputLabelProps={{
-						shrink: true,
-					}}
-				/>
-				<TextField
-					name='medications'
-					id='medications'
-					label='Лекарства'
-					type='text'
-					InputLabelProps={{
-						shrink: true,
-					}}
-					onChange={handleInputChange}
-				/>
+				{renderTextField(
+					FormFields.DATETIME,
+					'Дата и время',
+					'datetime-local',
+					FormFields.DATETIME,
+					{
+						min: 0,
+						required: REQUIRED_FIELD_MESSAGE,
+					},
+					date,
+				)}
+				{renderTextField(FormFields.SYSTOLIC, 'АД сист.', 'number', FormFields.SYSTOLIC, {
+					min: 0,
+					required: REQUIRED_FIELD_MESSAGE,
+				})}
+				{renderTextField(FormFields.DIASTOLIC, 'АД диаст.', 'number', FormFields.DIASTOLIC, {
+					min: 0,
+					required: REQUIRED_FIELD_MESSAGE,
+				})}
+				{renderTextField(FormFields.HEART_RATE, 'ЧСС', 'number', FormFields.HEART_RATE, {
+					min: 0,
+					required: REQUIRED_FIELD_MESSAGE,
+				})}
+				{renderTextField(FormFields.COMPLAINTS, 'Жалобы', 'text', FormFields.COMPLAINTS, {
+					minLength: { value: 4, message: 'Не меньше 4 символов' },
+				})}
+				{renderTextField(FormFields.MEDICATIONS, 'Лекарства', 'text', FormFields.MEDICATIONS, {
+					minLength: { value: 4, message: 'Не меньше 4 символов' },
+				})}
 			</Stack>
+			<Button type='submit' disabled={isDisabledForm} sx={{ alignSelf: 'end', margin: '5px' }}>
+				{entryStatus === Status.PENDING ? 'Сохранение...' : 'Сохранить'}
+			</Button>
+			{isError && <Alert severity='error'>Ошибка. Данные не сохранены</Alert>}
 		</form>
 	)
 }

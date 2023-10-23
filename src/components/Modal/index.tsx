@@ -15,17 +15,19 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 type ModalProps = {
 	title?: string
 	children: React.ReactNode
+	isOpen: boolean
+	setIsOpen: (isOpen: boolean) => void
 }
 
-const Modal: React.FC<ModalProps> = ({ children, title = '' }) => {
-	const [open, setOpen] = React.useState(true)
+const Modal: React.FC<ModalProps> = ({ children, title = '', isOpen, setIsOpen }) => {
+	// const [open, setOpen] = React.useState(isOpen)
 
 	const handleClose = () => {
-		setOpen(false)
+		setIsOpen(false)
 	}
 
 	return (
-		<BootstrapDialog onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
+		<BootstrapDialog onClose={handleClose} aria-labelledby='customized-dialog-title' open={isOpen}>
 			<DialogTitle sx={{ m: 2, p: 2 }} id='customized-dialog-title'>
 				{title}
 			</DialogTitle>

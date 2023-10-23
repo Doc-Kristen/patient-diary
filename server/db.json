@@ -1,60 +1,50 @@
 {
-    "data":  [
-	{
-		"datetime": "2023-10-01 08:30:00",
-		"systolic": 120,
-		"diastolic": 80,
-		"heartRate": 70,
-		"medications": "Aspirin",
-		"complaints": "Headache"
-	},
-	{
-		"datetime": "2023-10-02 09:15:00",
-		"systolic": 118,
-		"diastolic": 78,
-		"heartRate": 72,
-		"medications": "Ibuprofen",
-		"complaints": "Sore throat"
-	},
-	{
-		"datetime": "2023-10-03 10:00:00",
-		"systolic": 122,
-		"diastolic": 82,
-		"heartRate": 68,
-		"medications": "None",
-		"complaints": "Feeling tired"
-	},
-	{
-		"datetime": "2023-10-04 11:45:00",
-		"systolic": 124,
-		"diastolic": 84,
-		"heartRate": 75,
-		"medications": "Lisinopril",
-		"complaints": "Cough"
-	},
-	{
-		"datetime": "2023-10-05 13:20:00",
-		"systolic": 130,
-		"diastolic": 88,
-		"heartRate": 76,
-		"medications": "Losartan",
-		"complaints": "Nausea"
-	},
-	{
-		"datetime": "2023-10-06 15:00:00",
-		"systolic": 126,
-		"diastolic": 86,
-		"heartRate": 74,
-		"medications": "Atenolol",
-		"complaints": "Dizziness"
-	},
-	{
-		"datetime": "2023-10-07 16:30:00",
-		"systolic": 128,
-		"diastolic": 80,
-		"heartRate": 71,
-		"medications": "Metoprolol",
-		"complaints": "Shortness of breath"
-	}
-]
+  "users": [
+    {
+      "id": 1,
+      "firstName": "Иван",
+      "lastName": "Иванов",
+      "birthday": "1990-01-01",
+      "email": "ivan@example.com",
+      "role": "patient"
+    },
+    {
+      "id": 2,
+      "firstName": "Олег",
+      "lastName": "Соколов",
+      "birthday": "1991-01-01",
+      "email": "oleg@example.com",
+      "role": "patient"
+    }
+  ],
+  "medicalData": [
+    {
+      "id": 1,
+      "journal": [
+        {
+          "id": 3,
+          "datetime": "2023-10-01 08:30:00",
+          "systolic": 120,
+          "diastolic": 80,
+          "heartRate": 70,
+          "medications": "Aspirin",
+          "complaints": "Headache"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "journal": [
+        {
+          "id": 1,
+          "datetime": "2023-10-03 10:00:00",
+          "systolic": 122,
+          "diastolic": 82,
+          "heartRate": 68,
+          "medications": "None",
+          "complaints": "Feeling tired"
+        }
+      ]
+    }
+  ]
 }
