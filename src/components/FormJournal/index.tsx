@@ -22,6 +22,7 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
 	const date = dayjs().format('YYYY-MM-DDTHH:mm')
 	// const fakeId = uuidv4()
 	const REQUIRED_FIELD_MESSAGE = 'Обязательное поле'
+	const POSITIVE_INTEGER_MESSAGE = 'Введите значение больше 0'
 
 	const [isError, setIsError] = React.useState(false)
 
@@ -35,7 +36,7 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
 	} = useForm<HealthEntry>()
 
 	// настройки для текстовых подсказок в случае ошибки
-	const getErrorSettings = (fieldName: FormFields) => {
+	const getErrorSettings = (fieldName: keyof HealthEntry) => {
 		const error = !!errors[fieldName]
 		const helperText = errors[fieldName] ? errors[fieldName]?.message : ''
 		return { error, helperText }
@@ -92,15 +93,24 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
 					date,
 				)}
 				{renderTextField(FormFields.SYSTOLIC, 'АД сист.', 'number', FormFields.SYSTOLIC, {
-					min: 0,
+					min: {
+						value: 0,
+						message: POSITIVE_INTEGER_MESSAGE,
+					},
 					required: REQUIRED_FIELD_MESSAGE,
 				})}
 				{renderTextField(FormFields.DIASTOLIC, 'АД диаст.', 'number', FormFields.DIASTOLIC, {
-					min: 0,
+					min: {
+						value: 0,
+						message: POSITIVE_INTEGER_MESSAGE,
+					},
 					required: REQUIRED_FIELD_MESSAGE,
 				})}
 				{renderTextField(FormFields.HEART_RATE, 'ЧСС', 'number', FormFields.HEART_RATE, {
-					min: 0,
+					min: {
+						value: 0,
+						message: 'Введите значение больше 0',
+					},
 					required: REQUIRED_FIELD_MESSAGE,
 				})}
 				{renderTextField(FormFields.COMPLAINTS, 'Жалобы', 'text', FormFields.COMPLAINTS, {
