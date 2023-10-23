@@ -74,6 +74,7 @@ const SignUp: React.FC = () => {
 								label='Дата рождения'
 								type='date'
 								sx={{ width: '100%' }}
+								required
 								InputLabelProps={{
 									shrink: true,
 								}}
@@ -92,6 +93,7 @@ const SignUp: React.FC = () => {
 								id='email'
 								label='Email'
 								autoComplete='email'
+								required
 								{...register('email', {
 									required: validationMessages.requiredField,
 									pattern: {

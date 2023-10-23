@@ -20,7 +20,6 @@ type ModalProps = {
 }
 
 const Modal: React.FC<ModalProps> = ({ children, title = '', isOpen, setIsOpen }) => {
-	// const [open, setOpen] = React.useState(isOpen)
 
 	const handleClose = () => {
 		setIsOpen(false)

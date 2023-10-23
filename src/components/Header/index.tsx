@@ -6,7 +6,7 @@ const Header: React.FC = () => {
 		<AppBar position='fixed'>
 			<Toolbar>
 				<Typography variant='h6' component='h1'>
-					Patient diary
+					Patient's diary
 				</Typography>
 			</Toolbar>
 		</AppBar>
