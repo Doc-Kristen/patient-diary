@@ -7,23 +7,34 @@ import {
 	TextField,
 	FormControlLabel,
 	Checkbox,
-	Link,
 	Grid,
 	Box,
 	Typography,
 } from '@mui/material'
 import MonitorHeart from '@mui/icons-material/MonitorHeart'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { User } from 'types/User'
+import { Link } from 'react-router-dom'
 
 const SignIn: React.FC = () => {
-	const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
-		event.preventDefault()
-		const data = new FormData(event.currentTarget)
-		console.log({
-			email: data.get('email'),
-			password: data.get('password'),
-		})
+	const REQUIRED_FIELD_MESSAGE = 'Обязательное поле'
+	const emailPattern = /^\S+@\S+$/i
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<User>()
+
+	const getErrorSettings = (fieldName: keyof User) => {
+		const error: boolean = !!errors[fieldName]
+		const helperText = errors[fieldName]?.message || ''
+		return { error, helperText }
 	}
 
+	const onSubmit: SubmitHandler<User> = async formData => {
+		console.log(formData)
+	}
 	return (
 		<Container component='main' maxWidth='xs'>
 			<CssBaseline />
@@ -40,29 +51,39 @@ const SignIn: React.FC = () => {
 				<Typography component='h1' variant='h5'>
 					Авторизация
 				</Typography>
-				<Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+				<Box component='form' onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
 					<TextField
 						margin='normal'
 						required
 						fullWidth
 						id='email'
 						label='Email'
-						name='email'
 						autoComplete='email'
 						autoFocus
+						{...register('email', {
+							required: REQUIRED_FIELD_MESSAGE,
+							pattern: {
+								value: emailPattern,
+								message: 'Неверный формат email',
+							},
+						})}
+						{...getErrorSettings('email')}
 					/>
 					<TextField
 						margin='normal'
 						required
 						fullWidth
-						name='password'
 						label='Пароль'
 						type='password'
 						id='password'
 						autoComplete='current-password'
+						{...register('password', {
+							required: REQUIRED_FIELD_MESSAGE,
+						})}
+						{...getErrorSettings('password')}
 					/>
 					<FormControlLabel
-						control={<Checkbox value='remember' color='primary' />}
+						control={<Checkbox color='primary' {...register('remember')} />}
 						label='Запомнить пароль'
 					/>
 					<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
@@ -70,13 +91,13 @@ const SignIn: React.FC = () => {
 					</Button>
 					<Grid container>
 						<Grid item xs>
-							<Link href='#' variant='body2'>
+							<Link to='#'>
 								Забыли пароль?
 							</Link>
 						</Grid>
 						<Grid item>
-							<Link href='#' variant='body2'>
-								{'Зарегистрироваться?'}
+							<Link to='#'>
+								{'Зарегистрироваться'}
 							</Link>
 						</Grid>
 					</Grid>
