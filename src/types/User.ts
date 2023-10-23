@@ -1,5 +1,13 @@
+export type UserSignIn = {
+	email: string
+	password: string
+	remember: boolean
+}
+
 export type User = {
-    email: string;
-    password: string;
-    remember: boolean;
+	firstName: string
+	lastName: string
+	birthday: string
+	email: string
+	password: string
 }

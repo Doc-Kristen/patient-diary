@@ -3,8 +3,9 @@ const BACKEND_URL = 'http://localhost:3000'
 enum AppRoute {
 	Main = '/',
 	Patient = 'patient/:id',
-	Authorization = 'authorization',
-	Doctor = 'doctor',
+	Authorization = '/authorization',
+	Registration = '/registration',
+	Doctor = '/doctor',
 	NotFound = '*',
 }
 
@@ -23,4 +24,23 @@ enum FormFields {
 	DATETIME = 'datetime',
 }
 
-export { AppRoute, Status, FormFields, BACKEND_URL }
+const validationMessages = {
+	requiredField: 'Обязательное поле',
+	invalidEmail: 'Неверный формат email',
+	futureDateError: 'Дата не может быть в будущем',
+	passwordRequirements:
+		'Пароль должен содержать минимум 8 символов, включая заглавные буквы, строчные буквы и цифры.',
+}
+
+const emailPattern = /^\S+@\S+$/i
+const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+
+export {
+	AppRoute,
+	Status,
+	FormFields,
+	BACKEND_URL,
+	validationMessages,
+	emailPattern,
+	passwordPattern,
+}

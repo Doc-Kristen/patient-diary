@@ -13,26 +13,24 @@ import {
 } from '@mui/material'
 import MonitorHeart from '@mui/icons-material/MonitorHeart'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { User } from 'types/User'
+import { UserSignIn } from 'types/User'
 import { Link } from 'react-router-dom'
+import { emailPattern, validationMessages } from '@utils/const'
 
 const SignIn: React.FC = () => {
-	const REQUIRED_FIELD_MESSAGE = 'Обязательное поле'
-	const emailPattern = /^\S+@\S+$/i
-
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<User>()
+	} = useForm<UserSignIn>()
 
-	const getErrorSettings = (fieldName: keyof User) => {
+	const getErrorSettings = (fieldName: keyof UserSignIn) => {
 		const error: boolean = !!errors[fieldName]
 		const helperText = errors[fieldName]?.message || ''
 		return { error, helperText }
 	}
 
-	const onSubmit: SubmitHandler<User> = async formData => {
+	const onSubmit: SubmitHandler<UserSignIn> = async formData => {
 		console.log(formData)
 	}
 	return (
@@ -61,7 +59,7 @@ const SignIn: React.FC = () => {
 						autoComplete='email'
 						autoFocus
 						{...register('email', {
-							required: REQUIRED_FIELD_MESSAGE,
+							required: validationMessages.requiredField,
 							pattern: {
 								value: emailPattern,
 								message: 'Неверный формат email',
@@ -78,7 +76,7 @@ const SignIn: React.FC = () => {
 						id='password'
 						autoComplete='current-password'
 						{...register('password', {
-							required: REQUIRED_FIELD_MESSAGE,
+							required: validationMessages.requiredField,
 						})}
 						{...getErrorSettings('password')}
 					/>
@@ -91,14 +89,10 @@ const SignIn: React.FC = () => {
 					</Button>
 					<Grid container>
 						<Grid item xs>
-							<Link to='#'>
-								Забыли пароль?
-							</Link>
+							<Link to='#'>Забыли пароль?</Link>
 						</Grid>
 						<Grid item>
-							<Link to='#'>
-								{'Зарегистрироваться'}
-							</Link>
+							<Link to='#'>{'Зарегистрироваться'}</Link>
 						</Grid>
 					</Grid>
 				</Box>

@@ -1,26 +1,26 @@
 import React from 'react'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
-import TextField from '@mui/material/TextField'
-import Link from '@mui/material/Link'
-import Grid from '@mui/material/Grid'
-import { Box } from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import Typography from '@mui/material/Typography'
-import Container from '@mui/material/Container'
+import { Box, Grid, TextField, CssBaseline, Button, Typography, Container } from '@mui/material'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { User } from 'types/User'
+import { AppRoute, emailPattern, passwordPattern, validationMessages } from '@utils/const'
+import { isDateValid } from '@utils/utils'
+import { Link } from 'react-router-dom'
 
 const SignUp: React.FC = () => {
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault()
-		const data = new FormData(event.currentTarget)
-		console.log({
-			email: data.get('email'),
-			password: data.get('password'),
-			firstName: data.get('firstName'),
-			lastName: data.get('lastName'),
-			birthday: data.get('birthday'),
-		})
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<User>()
+
+	const getErrorSettings = (fieldName: keyof User) => {
+		const error: boolean = !!errors[fieldName]
+		const helperText = errors[fieldName]?.message || ''
+		return { error, helperText }
+	}
+
+	const onSubmit: SubmitHandler<User> = async formData => {
+		console.log(formData)
 	}
 
 	return (
@@ -33,22 +33,24 @@ const SignUp: React.FC = () => {
 					flexDirection: 'column',
 					alignItems: 'center',
 				}}>
-				<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-					<LockOutlinedIcon />
-				</Avatar>
 				<Typography component='h1' variant='h5'>
 					Регистрация
 				</Typography>
-				<Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+				<Box component='form' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
 					<Grid container spacing={2}>
 						<Grid item xs={12} sm={6}>
 							<TextField
 								autoComplete='given-name'
-								name='firstName'
-								required
 								fullWidth
+								required
 								id='firstName'
 								label='Имя'
+								type='text'
+								{...register('firstName', {
+									required: validationMessages.requiredField,
+									minLength: { value: 3, message: 'Не меньше 3 символов' },
+								})}
+								{...getErrorSettings('firstName')}
 								autoFocus
 							/>
 						</Grid>
@@ -58,8 +60,12 @@ const SignUp: React.FC = () => {
 								fullWidth
 								id='lastName'
 								label='Фамилия'
-								name='lastName'
 								autoComplete='family-name'
+								{...register('lastName', {
+									required: validationMessages.requiredField,
+									minLength: { value: 3, message: 'Не меньше 3 символов' },
+								})}
+								{...getErrorSettings('lastName')}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -67,33 +73,51 @@ const SignUp: React.FC = () => {
 								id='birthday'
 								label='Дата рождения'
 								type='date'
-								name='birthday'
 								sx={{ width: '100%' }}
-								defaultValue='2023-10-18'
 								InputLabelProps={{
 									shrink: true,
 								}}
+								{...register('birthday', {
+									required: validationMessages.requiredField,
+									validate: {
+										validDate: value => isDateValid(value) || 'Дата не может быть в будущем',
+									},
+								})}
+								{...getErrorSettings('birthday')}
 							/>
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
-								required
 								fullWidth
 								id='email'
 								label='Email'
-								name='email'
 								autoComplete='email'
+								{...register('email', {
+									required: validationMessages.requiredField,
+									pattern: {
+										value: emailPattern,
+										message: validationMessages.invalidEmail,
+									},
+								})}
+								{...getErrorSettings('email')}
 							/>
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
 								required
 								fullWidth
-								name='password'
 								label='Пароль'
 								type='password'
 								id='password'
 								autoComplete='new-password'
+								{...register('password', {
+									required: validationMessages.requiredField,
+									pattern: {
+										value: passwordPattern,
+										message: validationMessages.passwordRequirements,
+									},
+								})}
+								{...getErrorSettings('password')}
 							/>
 						</Grid>
 					</Grid>
@@ -102,9 +126,7 @@ const SignUp: React.FC = () => {
 					</Button>
 					<Grid container justifyContent='flex-end'>
 						<Grid item>
-							<Link href='#' variant='body2'>
-								Уже зарегистрированы? Войти
-							</Link>
+							<Link to={AppRoute.Authorization}>Уже зарегистрированы? Войти</Link>
 						</Grid>
 					</Grid>
 				</Box>
