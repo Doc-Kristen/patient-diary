@@ -1,12 +1,26 @@
 import React from 'react'
-import { Box, Grid, TextField, CssBaseline, Button, Typography, Container } from '@mui/material'
+import {
+	Box,
+	Grid,
+	TextField,
+	CssBaseline,
+	Button,
+	Typography,
+	Container,
+	Alert,
+} from '@mui/material'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { User } from 'types/User'
 import { AppRoute, emailPattern, passwordPattern, validationMessages } from '@helpers/const'
 import { isDateValid } from '@helpers/utils'
 import { Link } from 'react-router-dom'
+import { useAppDispatch } from '@store/store'
+import { postRegister } from '@store/user/asyncActions'
 
 const SignUp: React.FC = () => {
+	const dispatch = useAppDispatch()
+	const [isError, setIsError] = React.useState(false)
+	const [isSuccess, setIsSuccess] = React.useState(false)
 	const {
 		register,
 		handleSubmit,
@@ -20,7 +34,18 @@ const SignUp: React.FC = () => {
 	}
 
 	const onSubmit: SubmitHandler<User> = async formData => {
-		console.log(formData)
+		const response = await dispatch(postRegister(formData))
+		if (postRegister.fulfilled.match(response)) {
+			setIsSuccess(true) // показ сообщения об ошибке
+			setTimeout(() => {
+				setIsSuccess(false)
+			}, 1000)
+		} else {
+			setIsError(true) // показ сообщения об ошибке
+			setTimeout(() => {
+				setIsError(false)
+			}, 3000)
+		}
 	}
 
 	return (
@@ -126,9 +151,11 @@ const SignUp: React.FC = () => {
 					<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
 						Зарегистрироваться
 					</Button>
+					{isError && <Alert severity='error'>Ошибка регистрации</Alert>}
+					{isSuccess && <Alert severity='success'>Успешная регистрация</Alert>}
 					<Grid container justifyContent='flex-end'>
 						<Grid item>
-							<Link to={AppRoute.Authorization}>Уже зарегистрированы? Войти</Link>
+							<Link to={AppRoute.Login}>Уже зарегистрированы? Войти</Link>
 						</Grid>
 					</Grid>
 				</Box>

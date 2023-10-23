@@ -1,10 +1,8 @@
-const BACKEND_URL = 'http://localhost:3000'
-
 enum AppRoute {
 	Main = '/',
 	Patient = 'patient/:id',
-	Authorization = '/authorization',
-	Registration = '/registration',
+	Login = '/login',
+	Register = '/register',
 	Doctor = '/doctor',
 	NotFound = '*',
 }
@@ -38,12 +36,4 @@ const validationMessages = {
 const emailPattern = /^\S+@\S+$/i
 const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
 
-export {
-	AppRoute,
-	Status,
-	FormFields,
-	BACKEND_URL,
-	validationMessages,
-	emailPattern,
-	passwordPattern,
-}
+export { AppRoute, Status, FormFields, validationMessages, emailPattern, passwordPattern }

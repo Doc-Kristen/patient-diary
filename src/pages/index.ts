@@ -1,6 +1,6 @@
 export { default as Patient } from './Patient'
 export { default as Doctor } from './Doctor'
-export { default as Authorization } from './Authorization'
+export { default as Login } from './Login'
 export { default as NotFound } from './NotFound'
 export { default as Main } from './Main'
-export { default as Registration } from './Registration'
+export { default as Register } from './Register'

@@ -1,20 +1,12 @@
 {
   "users": [
     {
-      "id": 1,
+      "email": "test@gmail.com",
+      "password": "$2a$10$AYB8a1HwEt3QxqLjHlWpTeDru3W9px.JS41oNhT2i6/ur1T.Fx21m",
       "firstName": "Иван",
-      "lastName": "Иванов",
-      "birthday": "1990-01-01",
-      "email": "ivan@example.com",
-      "role": "patient"
-    },
-    {
-      "id": 2,
-      "firstName": "Олег",
-      "lastName": "Соколов",
-      "birthday": "1991-01-01",
-      "email": "oleg@example.com",
-      "role": "patient"
+      "lastName": "Сидоров",
+      "birthday": "2010-11-11",
+      "id": 1
     }
   ],
   "medicalData": [
@@ -29,20 +21,6 @@
           "heartRate": 70,
           "medications": "Aspirin",
           "complaints": "Headache"
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "journal": [
-        {
-          "id": 1,
-          "datetime": "2023-10-03 10:00:00",
-          "systolic": 122,
-          "diastolic": 82,
-          "heartRate": 68,
-          "medications": "None",
-          "complaints": "Feeling tired"
         }
       ]
     }

@@ -1,7 +1,7 @@
 import { SignUp } from '@components/index'
 import React from 'react'
 
-const Registration: React.FC = () => {
+const Register: React.FC = () => {
 	return (
 		<div>
 			<SignUp />
@@ -9,4 +9,4 @@ const Registration: React.FC = () => {
 	)
 }
 
-export default Registration
+export default Register

@@ -1,13 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios'
-import { BACKEND_URL } from '@helpers/const'
 import { HealthEntry } from 'types/HealthJournal'
+import api from '@services/api'
 
 // Запрос всех записей по id пользователя
 export const fetchJournal = createAsyncThunk<HealthEntry[], string>(
 	'journal/fetchJournalStatus',
 	async userId => {
-		const { data } = await axios.get(`${BACKEND_URL}/medicalData/${userId}`)
+		const { data } = await api.get(`/medicalData/${userId}`)
 		const { journal } = data // временное решение до создания рабочего бэкенда
 		return journal
 	},
@@ -18,12 +17,6 @@ export const createJournalEntry = createAsyncThunk<
 	HealthEntry,
 	{ userId: string; entryData: HealthEntry }
 >('journal/createJournalEntry', async ({ userId, entryData }) => {
-	const config = {
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	}
-
-	const { data } = await axios.post(`${BACKEND_URL}medicalData/${userId}`, entryData, config)
+	const { data } = await api.post(`medicalData/${userId}`, entryData)
 	return data
 })

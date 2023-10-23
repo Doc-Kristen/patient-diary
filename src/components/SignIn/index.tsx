@@ -10,14 +10,20 @@ import {
 	Grid,
 	Box,
 	Typography,
+	Alert,
 } from '@mui/material'
 import MonitorHeart from '@mui/icons-material/MonitorHeart'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { UserSignIn } from 'types/User'
 import { Link } from 'react-router-dom'
 import { AppRoute, emailPattern, validationMessages } from '@helpers/const'
+import { useAppDispatch } from '@store/store'
+import { postLogin } from '@store/user/asyncActions'
 
 const SignIn: React.FC = () => {
+	const dispatch = useAppDispatch()
+	const [isError, setIsError] = React.useState(false)
+
 	const {
 		register,
 		handleSubmit,
@@ -31,7 +37,15 @@ const SignIn: React.FC = () => {
 	}
 
 	const onSubmit: SubmitHandler<UserSignIn> = async formData => {
-		console.log(formData)
+		const response = await dispatch(postLogin(formData))
+		if (postLogin.fulfilled.match(response)) {
+			console.log('Успешная авторизация')
+		} else {
+			setIsError(true) // показ сообщения об ошибке
+			setTimeout(() => {
+				setIsError(false)
+			}, 3000)
+		}
 	}
 	return (
 		<Container component='main' maxWidth='xs'>
@@ -87,12 +101,13 @@ const SignIn: React.FC = () => {
 					<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
 						Войти
 					</Button>
+					{isError && <Alert severity='error'>Проверьте правильность логина и пароля</Alert>}
 					<Grid container>
 						<Grid item xs>
 							<Link to='#'>Забыли пароль?</Link>
 						</Grid>
 						<Grid item>
-							<Link to={AppRoute.Registration}>{'Зарегистрироваться'}</Link>
+							<Link to={AppRoute.Register}>{'Зарегистрироваться'}</Link>
 						</Grid>
 					</Grid>
 				</Box>

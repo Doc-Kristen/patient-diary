@@ -1,5 +1,5 @@
 import React from 'react'
-import { Patient, Doctor, NotFound, Authorization, Main, Registration } from '@pages/index'
+import { Patient, Doctor, NotFound, Login, Main, Register } from '@pages/index'
 import { Route, Routes } from 'react-router-dom'
 import { AppRoute } from '@helpers/const'
 import { MainLayout } from './layouts/index'
@@ -8,9 +8,9 @@ const App: React.FC = () => {
 		<Routes>
 			<Route path={AppRoute.Main} element={<MainLayout />}>
 				<Route index element={<Main />} />
-				<Route path={AppRoute.Authorization} element={<Authorization />} />
+				<Route path={AppRoute.Login} element={<Login />} />
 				<Route path={AppRoute.Patient} element={<Patient />} />
-				<Route path={AppRoute.Registration} element={<Registration />} />
+				<Route path={AppRoute.Register} element={<Register />} />
 				<Route path={AppRoute.Doctor} element={<Doctor />} />
 				<Route path={AppRoute.NotFound} element={<NotFound />} />
 			</Route>
