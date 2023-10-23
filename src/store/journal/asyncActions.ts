@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { BACKEND_URL } from '@utils/const'
+import { BACKEND_URL } from '@helpers/const'
 import { HealthEntry } from 'types/HealthJournal'
 
 // Запрос всех записей по id пользователя

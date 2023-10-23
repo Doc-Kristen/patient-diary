@@ -2,13 +2,13 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
-// import { v4 as uuidv4 } from 'uuid'
 import { TextField, Stack, Button, Alert } from '@mui/material'
 import { createJournalEntry, fetchJournal } from '@store/journal/asyncActions'
 import { useAppDispatch } from '@store/store'
 import { HealthEntry } from 'types/HealthJournal'
-import { FormFields, Status } from '@utils/const'
+import { FormFields, Status, validationMessages } from '@helpers/const'
 import { selectEntryStatus } from '@store/journal/selectors'
+import { isDateValid } from '@helpers/utils'
 
 type FormJournalProps = {
 	setIsOpen: (arg: boolean) => void
@@ -20,9 +20,6 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
 	const dispatch = useAppDispatch()
 
 	const date = dayjs().format('YYYY-MM-DDTHH:mm')
-	// const fakeId = uuidv4()
-	const REQUIRED_FIELD_MESSAGE = 'Обязательное поле'
-	const POSITIVE_INTEGER_MESSAGE = 'Введите значение больше 0'
 
 	const [isError, setIsError] = React.useState(false)
 
@@ -87,37 +84,39 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
 					'datetime-local',
 					FormFields.DATETIME,
 					{
-						min: 0,
-						required: REQUIRED_FIELD_MESSAGE,
+						required: validationMessages.requiredField,
+						validate: {
+							validDate: value => isDateValid(value) || 'Дата не может быть в будущем',
+						},
 					},
 					date,
 				)}
 				{renderTextField(FormFields.SYSTOLIC, 'АД сист.', 'number', FormFields.SYSTOLIC, {
 					min: {
 						value: 0,
-						message: POSITIVE_INTEGER_MESSAGE,
+						message: validationMessages.greaterThanZero,
 					},
-					required: REQUIRED_FIELD_MESSAGE,
+					required: validationMessages.requiredField,
 				})}
 				{renderTextField(FormFields.DIASTOLIC, 'АД диаст.', 'number', FormFields.DIASTOLIC, {
 					min: {
 						value: 0,
-						message: POSITIVE_INTEGER_MESSAGE,
+						message: validationMessages.greaterThanZero,
 					},
-					required: REQUIRED_FIELD_MESSAGE,
+					required: validationMessages.requiredField,
 				})}
 				{renderTextField(FormFields.HEART_RATE, 'ЧСС', 'number', FormFields.HEART_RATE, {
 					min: {
 						value: 0,
-						message: 'Введите значение больше 0',
+						message: validationMessages.greaterThanZero,
 					},
-					required: REQUIRED_FIELD_MESSAGE,
+					required: validationMessages.requiredField,
 				})}
 				{renderTextField(FormFields.COMPLAINTS, 'Жалобы', 'text', FormFields.COMPLAINTS, {
-					minLength: { value: 4, message: 'Не меньше 4 символов' },
+					minLength: { value: 4, message: validationMessages.minLengthError },
 				})}
 				{renderTextField(FormFields.MEDICATIONS, 'Лекарства', 'text', FormFields.MEDICATIONS, {
-					minLength: { value: 4, message: 'Не меньше 4 символов' },
+					minLength: { value: 4, message: validationMessages.minLengthError },
 				})}
 			</Stack>
 			<Button type='submit' disabled={isDisabledForm} sx={{ alignSelf: 'end', margin: '5px' }}>

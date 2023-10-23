@@ -4,7 +4,7 @@ import { FormJournal, HealthJournal, Modal } from '@components/index'
 import { Button, Container, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { selectJournalData, selectJournalStatus } from '@store/journal/selectors'
-import { Status } from '@utils/const'
+import { Status } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { fetchJournal } from '@store/journal/asyncActions'
 

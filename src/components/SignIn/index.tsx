@@ -15,7 +15,7 @@ import MonitorHeart from '@mui/icons-material/MonitorHeart'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { UserSignIn } from 'types/User'
 import { Link } from 'react-router-dom'
-import { emailPattern, validationMessages } from '@utils/const'
+import { AppRoute, emailPattern, validationMessages } from '@helpers/const'
 
 const SignIn: React.FC = () => {
 	const {
@@ -62,7 +62,7 @@ const SignIn: React.FC = () => {
 							required: validationMessages.requiredField,
 							pattern: {
 								value: emailPattern,
-								message: 'Неверный формат email',
+								message: validationMessages.invalidEmail,
 							},
 						})}
 						{...getErrorSettings('email')}
@@ -92,7 +92,7 @@ const SignIn: React.FC = () => {
 							<Link to='#'>Забыли пароль?</Link>
 						</Grid>
 						<Grid item>
-							<Link to='#'>{'Зарегистрироваться'}</Link>
+							<Link to={AppRoute.Registration}>{'Зарегистрироваться'}</Link>
 						</Grid>
 					</Grid>
 				</Box>

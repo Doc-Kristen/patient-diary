@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { Status } from '@utils/const'
+import { Status } from '@helpers/const'
 import { HealthEntry } from 'types/HealthJournal'
 import { createJournalEntry, fetchJournal } from './asyncActions'
 
@@ -30,7 +30,6 @@ const journalSlice = createSlice({
 		builder.addCase(fetchJournal.fulfilled, (state, action) => {
 			state.dataStatus = Status.SUCCESS
 			state.data = action.payload
-
 		})
 		builder.addCase(fetchJournal.rejected, state => {
 			state.dataStatus = Status.ERROR

@@ -27,9 +27,12 @@ enum FormFields {
 const validationMessages = {
 	requiredField: 'Обязательное поле',
 	invalidEmail: 'Неверный формат email',
+
 	futureDateError: 'Дата не может быть в будущем',
 	passwordRequirements:
 		'Пароль должен содержать минимум 8 символов, включая заглавные буквы, строчные буквы и цифры.',
+	minLengthError: 'Не меньше 3 символов',
+	greaterThanZero: 'Введите значение больше 0',
 }
 
 const emailPattern = /^\S+@\S+$/i

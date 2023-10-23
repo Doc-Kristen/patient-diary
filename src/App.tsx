@@ -1,7 +1,7 @@
 import React from 'react'
 import { Patient, Doctor, NotFound, Authorization, Main, Registration } from '@pages/index'
 import { Route, Routes } from 'react-router-dom'
-import { AppRoute } from '@utils/const'
+import { AppRoute } from '@helpers/const'
 import { MainLayout } from './layouts/index'
 const App: React.FC = () => {
 	return (

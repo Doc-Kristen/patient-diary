@@ -2,8 +2,8 @@ import React from 'react'
 import { Box, Grid, TextField, CssBaseline, Button, Typography, Container } from '@mui/material'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { User } from 'types/User'
-import { AppRoute, emailPattern, passwordPattern, validationMessages } from '@utils/const'
-import { isDateValid } from '@utils/utils'
+import { AppRoute, emailPattern, passwordPattern, validationMessages } from '@helpers/const'
+import { isDateValid } from '@helpers/utils'
 import { Link } from 'react-router-dom'
 
 const SignUp: React.FC = () => {
