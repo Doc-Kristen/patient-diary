@@ -5,11 +5,13 @@ import { UserAuth } from 'types/User'
 interface userState {
 	isAuth: boolean
 	userData: UserAuth | null
+	isError: boolean
 }
 
 const initialState: userState = {
 	isAuth: false,
 	userData: null,
+	isError: false,
 }
 
 const userSlice = createSlice({
@@ -19,25 +21,31 @@ const userSlice = createSlice({
 		setLoginStatus(state, action) {
 			state.isAuth = action.payload
 		},
+		setErrorStatus(state, action) {
+			state.isError = action.payload
+		},
 	},
 	extraReducers: builder => {
 		builder.addCase(login.pending, state => {
 			state.isAuth = false
+			state.isError = false
 		})
 		builder.addCase(login.fulfilled, (state, action) => {
-			state.isAuth = true
 			state.userData = action.payload
 			localStorage.setItem('token', action.payload.accessToken)
+			state.isAuth = true
+			state.isError = false
 		})
 		builder.addCase(login.rejected, state => {
 			state.isAuth = false
+			state.isError = true
 		})
 		builder.addCase(registration.pending, state => {
 			state.isAuth = false
 		})
 		builder.addCase(registration.fulfilled, (state, action) => {
-			state.isAuth = true
 			state.userData = action.payload
+			state.isAuth = true
 			console.log(action.payload)
 			localStorage.setItem('token', action.payload.accessToken)
 		})
@@ -47,6 +55,6 @@ const userSlice = createSlice({
 	},
 })
 
-export const { setLoginStatus } = userSlice.actions
+export const { setLoginStatus, setErrorStatus } = userSlice.actions
 
 export default userSlice.reducer

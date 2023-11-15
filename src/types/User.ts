@@ -1,7 +1,7 @@
 export type UserSignIn = {
 	email: string
 	password: string
-	remember: boolean
+	remember?: boolean
 }
 
 export type User = {
@@ -14,5 +14,5 @@ export type User = {
 
 export type UserAuth = {
 	accessToken: string
-	user: User
+	userId: number
 }

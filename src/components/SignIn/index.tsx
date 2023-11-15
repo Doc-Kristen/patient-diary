@@ -11,6 +11,7 @@ import {
 	Box,
 	Typography,
 	Alert,
+	Snackbar,
 } from '@mui/material'
 import MonitorHeart from '@mui/icons-material/MonitorHeart'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -19,15 +20,17 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AppRoute, emailPattern, validationMessages } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { login } from '@store/user/asyncActions'
-import { selectUserId } from '@store/user/selectors'
+import { selectIsError, selectUserId } from '@store/user/selectors'
 import { useSelector } from 'react-redux'
+import { setErrorStatus } from '@store/user/slice'
 
 const SignIn: React.FC = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
-	const [isError, setIsError] = React.useState(false)
+	const autoHideDuration = 3000 // время, через которое скрывается сообщение в случае ошибки
 
 	const userId = useSelector(selectUserId)
+	const isError = useSelector(selectIsError)
 
 	const {
 		register,
@@ -42,16 +45,15 @@ const SignIn: React.FC = () => {
 	}
 
 	const onSubmit: SubmitHandler<UserSignIn> = async formData => {
-		const response = await dispatch(login(formData))
-		if (login.fulfilled.match(response)) {
-			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя
-		} else {
-			setIsError(true) // показ сообщения об ошибке
-			setTimeout(() => {
-				setIsError(false)
-			}, 3000)
-		}
+		dispatch(login(formData))
 	}
+
+	React.useEffect(() => {
+		if (userId) {
+			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя, если авторизован
+		}
+	}, [userId, navigate])
+
 	return (
 		<Container component='main' maxWidth='xs'>
 			<CssBaseline />
@@ -106,7 +108,12 @@ const SignIn: React.FC = () => {
 					<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
 						Войти
 					</Button>
-					{isError && <Alert severity='error'>Проверьте правильность логина и пароля</Alert>}
+					<Snackbar
+						open={isError}
+						autoHideDuration={autoHideDuration}
+						onClose={() => dispatch(setErrorStatus(false))}>
+						<Alert severity='error'>Проверьте правильность логина и пароля</Alert>
+					</Snackbar>
 					<Grid container>
 						<Grid item xs>
 							<Link to='#'>Забыли пароль?</Link>
