@@ -17,6 +17,7 @@ export default defineConfig({
 			'@helpers': '/src/helpers',
 			'@store': '/src/store',
 			'@services': '/src/services',
+			'@hoc': '/src/hoc',
 		},
 	},
 })

@@ -25,7 +25,8 @@
 			"@images/*": ["assets/images/*"],
 			"@helpers/*": ["helpers/*"],
 			"@services/*": ["services/*"],
-			"@store/*": ["store/*"]
+			"@store/*": ["store/*"],
+			"@hoc/*": ["hoc/*"]
 		},
 
 		/* Linting */
