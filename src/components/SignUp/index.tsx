@@ -8,6 +8,7 @@ import {
 	Typography,
 	Container,
 	Alert,
+	Snackbar,
 } from '@mui/material'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { User } from 'types/User'
@@ -17,13 +18,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@store/store'
 import { registration } from '@store/auth/asyncActions'
 import { useSelector } from 'react-redux'
-import { selectUserId } from '@store/auth/selectors'
+import { selectIsError, selectUserId } from '@store/auth/selectors'
+import { setErrorStatus } from '@store/auth/slice'
 
 const SignUp: React.FC = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
-	const [isError, setIsError] = React.useState(false)
-	const [isSuccess, setIsSuccess] = React.useState(false)
+	const autoHideDuration = 3000 // время, через которое скрывается сообщение в случае ошибки
+	const isError = useSelector(selectIsError)
 
 	const userId = useSelector(selectUserId)
 	const {
@@ -39,20 +41,14 @@ const SignUp: React.FC = () => {
 	}
 
 	const onSubmit: SubmitHandler<User> = async formData => {
-		const response = await dispatch(registration(formData))
-		if (registration.fulfilled.match(response)) {
-			setIsSuccess(true) // показ сообщения об успешной регистрации
-			setTimeout(() => {
-				setIsSuccess(false)
-			}, 3000)
-			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя
-		} else {
-			setIsError(true) // показ сообщения об ошибке
-			setTimeout(() => {
-				setIsError(false)
-			}, 3000)
-		}
+		dispatch(registration(formData))
 	}
+
+	React.useEffect(() => {
+		if (userId) {
+			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя, если авторизован
+		}
+	}, [userId, navigate])
 
 	return (
 		<Container component='main' maxWidth='xs'>
@@ -73,13 +69,12 @@ const SignUp: React.FC = () => {
 							<TextField
 								autoComplete='given-name'
 								fullWidth
-								required
 								id='firstName'
 								label='Имя'
 								type='text'
 								{...register('firstName', {
-									required: validationMessages.requiredField,
-									minLength: { value: 3, message: 'Не меньше 3 символов' },
+									minLength: { value: 1, message: 'Не меньше 1 символa' },
+									maxLength: { value: 30, message: 'Не больше 30 символов' },
 								})}
 								{...getErrorSettings('firstName')}
 								autoFocus
@@ -87,14 +82,13 @@ const SignUp: React.FC = () => {
 						</Grid>
 						<Grid item xs={12} sm={6}>
 							<TextField
-								required
 								fullWidth
 								id='lastName'
 								label='Фамилия'
 								autoComplete='family-name'
 								{...register('lastName', {
-									required: validationMessages.requiredField,
-									minLength: { value: 3, message: 'Не меньше 3 символов' },
+									minLength: { value: 1, message: 'Не меньше 1 символа' },
+									maxLength: { value: 30, message: 'Не больше 30 символов' },
 								})}
 								{...getErrorSettings('lastName')}
 							/>
@@ -105,14 +99,13 @@ const SignUp: React.FC = () => {
 								label='Дата рождения'
 								type='date'
 								sx={{ width: '100%' }}
-								required
 								InputLabelProps={{
 									shrink: true,
 								}}
 								{...register('birthday', {
-									required: validationMessages.requiredField,
 									validate: {
-										validDate: value => isDateValid(value) || 'Дата не может быть в будущем',
+										validDate: value =>
+											value ? isDateValid(value) || 'Дата не может быть в будущем' : true,
 									},
 								})}
 								{...getErrorSettings('birthday')}
@@ -157,8 +150,12 @@ const SignUp: React.FC = () => {
 					<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
 						Зарегистрироваться
 					</Button>
-					{isError && <Alert severity='error'>Ошибка регистрации</Alert>}
-					{isSuccess && <Alert severity='success'>Успешная регистрация</Alert>}
+					<Snackbar
+						open={isError}
+						autoHideDuration={autoHideDuration}
+						onClose={() => dispatch(setErrorStatus(false))}>
+						<Alert severity='error'>Не удалось зарегистрироваться</Alert>
+					</Snackbar>
 					<Grid container justifyContent='flex-end'>
 						<Grid item>
 							<Link to={AppRoute.Login}>Уже зарегистрированы? Войти</Link>

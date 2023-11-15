@@ -5,9 +5,9 @@ export type UserSignIn = {
 }
 
 export type User = {
-	firstName: string
-	lastName: string
-	birthday: string
+	firstName?: string
+	lastName?: string
+	birthday?: string
 	email: string
 	password: string
 }

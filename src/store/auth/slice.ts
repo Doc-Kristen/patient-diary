@@ -45,12 +45,13 @@ const authSlice = createSlice({
 		})
 		builder.addCase(registration.fulfilled, (state, action) => {
 			state.userData = action.payload
-			state.isAuth = true
-			console.log(action.payload)
 			localStorage.setItem('token', action.payload.accessToken)
+			state.isAuth = true
+			state.isError = false
 		})
 		builder.addCase(registration.rejected, state => {
 			state.isAuth = false
+			state.isError = true
 		})
 	},
 })
