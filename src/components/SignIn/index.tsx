@@ -15,14 +15,19 @@ import {
 import MonitorHeart from '@mui/icons-material/MonitorHeart'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { UserSignIn } from 'types/User'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AppRoute, emailPattern, validationMessages } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { login } from '@store/user/asyncActions'
+import { selectUserId } from '@store/user/selectors'
+import { useSelector } from 'react-redux'
 
 const SignIn: React.FC = () => {
 	const dispatch = useAppDispatch()
+	const navigate = useNavigate()
 	const [isError, setIsError] = React.useState(false)
+
+	const userId = useSelector(selectUserId)
 
 	const {
 		register,
@@ -39,7 +44,7 @@ const SignIn: React.FC = () => {
 	const onSubmit: SubmitHandler<UserSignIn> = async formData => {
 		const response = await dispatch(login(formData))
 		if (login.fulfilled.match(response)) {
-			console.log('Успешная авторизация')
+			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя
 		} else {
 			setIsError(true) // показ сообщения об ошибке
 			setTimeout(() => {
