@@ -18,7 +18,7 @@ import { UserSignIn } from 'types/User'
 import { Link } from 'react-router-dom'
 import { AppRoute, emailPattern, validationMessages } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
-import { postLogin } from '@store/user/asyncActions'
+import { login } from '@store/user/asyncActions'
 
 const SignIn: React.FC = () => {
 	const dispatch = useAppDispatch()
@@ -37,8 +37,8 @@ const SignIn: React.FC = () => {
 	}
 
 	const onSubmit: SubmitHandler<UserSignIn> = async formData => {
-		const response = await dispatch(postLogin(formData))
-		if (postLogin.fulfilled.match(response)) {
+		const response = await dispatch(login(formData))
+		if (login.fulfilled.match(response)) {
 			console.log('Успешная авторизация')
 		} else {
 			setIsError(true) // показ сообщения об ошибке

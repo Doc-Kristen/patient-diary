@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { postLogin, postRegister } from './asyncActions'
+import { login, registration } from './asyncActions'
 import { UserAuth } from 'types/User'
 
 interface userState {
@@ -21,24 +21,27 @@ const userSlice = createSlice({
 		},
 	},
 	extraReducers: builder => {
-		builder.addCase(postLogin.pending, state => {
+		builder.addCase(login.pending, state => {
 			state.isAuth = false
 		})
-		builder.addCase(postLogin.fulfilled, (state, action) => {
+		builder.addCase(login.fulfilled, (state, action) => {
 			state.isAuth = true
 			state.userData = action.payload
+			localStorage.setItem('token', action.payload.accessToken)
 		})
-		builder.addCase(postLogin.rejected, state => {
+		builder.addCase(login.rejected, state => {
 			state.isAuth = false
 		})
-		builder.addCase(postRegister.pending, state => {
+		builder.addCase(registration.pending, state => {
 			state.isAuth = false
 		})
-		builder.addCase(postRegister.fulfilled, (state, action) => {
+		builder.addCase(registration.fulfilled, (state, action) => {
 			state.isAuth = true
 			state.userData = action.payload
+			console.log(action.payload)
+			localStorage.setItem('token', action.payload.accessToken)
 		})
-		builder.addCase(postRegister.rejected, state => {
+		builder.addCase(registration.rejected, state => {
 			state.isAuth = false
 		})
 	},

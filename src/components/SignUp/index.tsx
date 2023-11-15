@@ -13,14 +13,19 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { User } from 'types/User'
 import { AppRoute, emailPattern, passwordPattern, validationMessages } from '@helpers/const'
 import { isDateValid } from '@helpers/utils'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@store/store'
-import { postRegister } from '@store/user/asyncActions'
+import { registration } from '@store/user/asyncActions'
+import { useSelector } from 'react-redux'
+import { selectUserId } from '@store/user/selectors'
 
 const SignUp: React.FC = () => {
 	const dispatch = useAppDispatch()
+	const navigate = useNavigate()
 	const [isError, setIsError] = React.useState(false)
 	const [isSuccess, setIsSuccess] = React.useState(false)
+
+	const userId = useSelector(selectUserId)
 	const {
 		register,
 		handleSubmit,
@@ -34,12 +39,13 @@ const SignUp: React.FC = () => {
 	}
 
 	const onSubmit: SubmitHandler<User> = async formData => {
-		const response = await dispatch(postRegister(formData))
-		if (postRegister.fulfilled.match(response)) {
-			setIsSuccess(true) // показ сообщения об ошибке
+		const response = await dispatch(registration(formData))
+		if (registration.fulfilled.match(response)) {
+			setIsSuccess(true) // показ сообщения об успешной регистрации
 			setTimeout(() => {
 				setIsSuccess(false)
-			}, 1000)
+			}, 3000)
+			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя
 		} else {
 			setIsError(true) // показ сообщения об ошибке
 			setTimeout(() => {

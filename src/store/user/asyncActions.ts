@@ -4,12 +4,15 @@ import api from '@services/api'
 import { User, UserAuth, UserSignIn } from 'types/User'
 
 // Авторизация пользователя
-export const postLogin = createAsyncThunk<UserAuth, UserSignIn>('user/postLogin', async userData => {
+export const login = createAsyncThunk<UserAuth, UserSignIn>('user/postLogin', async userData => {
 	const { data } = await api.post(AppRoute.Login, userData)
 	return data
 })
 
-export const postRegister = createAsyncThunk<UserAuth, User>('user/postRegister', async userData => {
-	const { data } = await api.post(AppRoute.Register, userData)
-	return data
-})
+export const registration = createAsyncThunk<UserAuth, User>(
+	'user/postRegister',
+	async userData => {
+		const { data } = await api.post<UserAuth>('/auth/registration', userData)
+		return data
+	},
+)
