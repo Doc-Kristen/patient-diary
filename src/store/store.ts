@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 import journal from './journal/slice'
-import user from './user/slice'
+import auth from './auth/slice'
 
 export const store = configureStore({
 	reducer: {
 		journal,
-		user,
+		auth,
 	},
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware({

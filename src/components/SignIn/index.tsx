@@ -19,10 +19,10 @@ import { UserSignIn } from 'types/User'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppRoute, emailPattern, validationMessages } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
-import { login } from '@store/user/asyncActions'
-import { selectIsError, selectUserId } from '@store/user/selectors'
+import { login } from '@store/auth/asyncActions'
+import { selectIsError, selectUserId } from '@store/auth/selectors'
 import { useSelector } from 'react-redux'
-import { setErrorStatus } from '@store/user/slice'
+import { setErrorStatus } from '@store/auth/slice'
 
 const SignIn: React.FC = () => {
 	const dispatch = useAppDispatch()

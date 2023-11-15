@@ -14,8 +14,8 @@ const initialState: userState = {
 	isError: false,
 }
 
-const userSlice = createSlice({
-	name: 'user',
+const authSlice = createSlice({
+	name: 'auth',
 	initialState,
 	reducers: {
 		setLoginStatus(state, action) {
@@ -55,6 +55,6 @@ const userSlice = createSlice({
 	},
 })
 
-export const { setLoginStatus, setErrorStatus } = userSlice.actions
+export const { setLoginStatus, setErrorStatus } = authSlice.actions
 
-export default userSlice.reducer
+export default authSlice.reducer

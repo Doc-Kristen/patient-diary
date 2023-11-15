@@ -15,9 +15,9 @@ import { AppRoute, emailPattern, passwordPattern, validationMessages } from '@he
 import { isDateValid } from '@helpers/utils'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@store/store'
-import { registration } from '@store/user/asyncActions'
+import { registration } from '@store/auth/asyncActions'
 import { useSelector } from 'react-redux'
-import { selectUserId } from '@store/user/selectors'
+import { selectUserId } from '@store/auth/selectors'
 
 const SignUp: React.FC = () => {
 	const dispatch = useAppDispatch()

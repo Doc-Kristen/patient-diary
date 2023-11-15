@@ -2,7 +2,7 @@ enum AppRoute {
 	Main = '/',
 	Patient = 'patient/:id',
 	Login = '/login',
-	Register = '/register',
+	Register = '/registration',
 	Doctor = '/doctor',
 	NotFound = '*',
 }
