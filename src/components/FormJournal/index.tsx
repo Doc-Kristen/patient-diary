@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux'
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { TextField, Stack, Button, Alert } from '@mui/material'
-import { createJournalEntry, fetchJournal } from '@store/journal/asyncActions'
+import { createJournalEntry, fetchUser } from '@store/userData/asyncActions'
 import { useAppDispatch } from '@store/store'
 import { HealthEntry } from 'types/HealthJournal'
 import { FormFields, Status, validationMessages } from '@helpers/const'
-import { selectEntryStatus } from '@store/journal/selectors'
+import { selectEntryStatus } from '@store/userData/selectors'
 import { isDateValid } from '@helpers/utils'
 
 type FormJournalProps = {
@@ -65,7 +65,7 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
 	const onSubmit: SubmitHandler<HealthEntry> = async formData => {
 		const response = await dispatch(createJournalEntry({ userId: id, entryData: formData }))
 		if (createJournalEntry.fulfilled.match(response)) {
-			dispatch(fetchJournal(id))
+			dispatch(fetchUser(id))
 			setIsOpen(false)
 		} else {
 			setIsError(true) // показ сообщения об ошибке

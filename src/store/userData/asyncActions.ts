@@ -3,14 +3,11 @@ import { HealthEntry } from 'types/HealthJournal'
 import api from '@services/api'
 
 // Запрос всех записей по id пользователя
-export const fetchJournal = createAsyncThunk<HealthEntry[], string>(
-	'journal/fetchJournalStatus',
-	async userId => {
-		const { data } = await api.get(`/medicalData/${userId}`)
-		const { journal } = data // временное решение до создания рабочего бэкенда
-		return journal
-	},
-)
+export const fetchUser = createAsyncThunk<HealthEntry[], string>('userData/fetchUser', async userId => {
+	const { data } = await api.get(`/users/${userId}`)
+	const { journal } = data // временное решение до создания рабочего бэкенда
+	return journal
+})
 
 // Добавление новой записи в журнал
 export const createJournalEntry = createAsyncThunk<

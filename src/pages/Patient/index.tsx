@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom'
 import { FormJournal, HealthJournal, Modal } from '@components/index'
 import { Button, Container, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
-import { selectJournalData, selectJournalStatus } from '@store/journal/selectors'
+import { selectJournalData, selectJournalStatus } from '@store/userData/selectors'
 import { Status } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
-import { fetchJournal } from '@store/journal/asyncActions'
+import { fetchUser } from '@store/userData/asyncActions'
 
 const Patient: React.FC = () => {
 	const dispatch = useAppDispatch()
@@ -21,7 +21,7 @@ const Patient: React.FC = () => {
 	const handleOpen = () => setIsOpen(true)
 
 	React.useEffect(() => {
-		dispatch(fetchJournal(userId))
+		dispatch(fetchUser(userId))
 	}, [dispatch, id, userId])
 
 	if (status === Status.PENDING) {
