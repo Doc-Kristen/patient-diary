@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { FormJournal, HealthJournal, Modal } from '@components/index'
 import { Button, Container, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
-import { selectJournalData, selectJournalStatus } from '@store/userData/selectors'
+import { selectJournal, selectDataStatus } from '@store/userData/selectors'
 import { Status } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { fetchUser } from '@store/userData/asyncActions'
@@ -13,9 +13,9 @@ const Patient: React.FC = () => {
 	const { id } = useParams()
 	const userId = id || ''
 
-	const data = useSelector(selectJournalData)
+	const data = useSelector(selectJournal)
 
-	const status = useSelector(selectJournalStatus)
+	const status = useSelector(selectDataStatus)
 
 	const [isOpen, setIsOpen] = React.useState(false)
 	const handleOpen = () => setIsOpen(true)

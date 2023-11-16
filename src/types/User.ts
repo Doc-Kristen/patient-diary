@@ -1,3 +1,5 @@
+import { HealthEntry } from './HealthJournal'
+
 export type UserSignIn = {
 	email: string
 	password: string
@@ -10,6 +12,15 @@ export type User = {
 	birthday?: string
 	email: string
 	password: string
+}
+
+export type UserData = {
+	firstName?: string
+	lastName?: string
+	birthday?: string
+	email: string
+	journal: HealthEntry[]
+	banned?: boolean
 }
 
 export type UserAuth = {

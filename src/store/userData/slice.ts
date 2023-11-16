@@ -1,16 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Status } from '@helpers/const'
-import { HealthEntry } from 'types/HealthJournal'
 import { createJournalEntry, fetchUser } from './asyncActions'
+import { UserData } from 'types/User'
 
 interface UserDataState {
-	data: HealthEntry[]
+	data: UserData
 	dataStatus: Status
 	entryStatus: Status | null
 }
 
 const initialState: UserDataState = {
-	data: [] as HealthEntry[],
+	data: {} as UserData,
 	dataStatus: Status.PENDING,
 	entryStatus: null,
 }
@@ -33,7 +33,6 @@ const userDataSlice = createSlice({
 		})
 		builder.addCase(fetchUser.rejected, state => {
 			state.dataStatus = Status.ERROR
-			state.data = []
 		})
 		builder.addCase(createJournalEntry.pending, state => {
 			state.entryStatus = Status.PENDING
