@@ -10,10 +10,10 @@ export const fetchUser = createAsyncThunk<UserData, string>('userData/fetchUser'
 })
 
 // Добавление новой записи в журнал
-export const createJournalEntry = createAsyncThunk<
-	HealthEntry,
-	{ userId: string; entryData: HealthEntry }
->('journal/createJournalEntry', async ({ userId, entryData }) => {
-	const { data } = await api.post(`medicalData/${userId}`, entryData)
-	return data
-})
+export const createJournalEntry = createAsyncThunk<HealthEntry, HealthEntry>(
+	'journal/createJournalEntry',
+	async entryData => {
+		const { data } = await api.post('/journal', entryData)
+		return data
+	},
+)

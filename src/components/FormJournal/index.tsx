@@ -63,7 +63,12 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
 	)
 
 	const onSubmit: SubmitHandler<HealthEntry> = async formData => {
-		const response = await dispatch(createJournalEntry({ userId: id, entryData: formData }))
+		// сразу переводим данные в числа, так как будут использоваться в сложных расчетах
+		formData.systolic = +formData.systolic
+		formData.diastolic = +formData.diastolic
+		formData.heartRate = +formData.heartRate
+
+		const response = await dispatch(createJournalEntry(formData))
 		if (createJournalEntry.fulfilled.match(response)) {
 			dispatch(fetchUser(id))
 			setIsOpen(false)
