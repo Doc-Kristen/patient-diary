@@ -11,19 +11,30 @@ import {
 	IconButton,
 } from '@mui/material'
 import { Edit, Delete } from '@mui/icons-material'
-import { HealthJournalProps } from 'types/HealthJournal'
+import { HealthEntry, HealthJournalProps } from 'types/HealthJournal'
 import { columns } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { deleteJournalEntry, fetchUser } from '@store/userData/asyncActions'
+import FormJournal from '@components/FormJournal'
+import Modal from '@components/Modal'
 
 const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 	const dispatch = useAppDispatch()
 	const { id } = useParams()
 	const userId = id || ''
 
+	const [isOpen, setIsOpen] = React.useState(false)
+	const [currentEntry, setcurrentEntry] = React.useState<HealthEntry>()
+
 	const onDeleteEntry = async (rowId: string) => {
 		await dispatch(deleteJournalEntry(rowId))
 		dispatch(fetchUser(userId))
+	}
+
+	const onUpdateEntry = (entry: HealthEntry) => {
+		console.log(entry)
+		setIsOpen(true)
+		setcurrentEntry(entry)
 	}
 
 	return (
@@ -55,7 +66,7 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 										return (
 											<TableCell key={column.id} sx={{ textAlign: 'left' }}>
 												{column.id === 'edit' && (
-													<IconButton>
+													<IconButton onClick={() => onUpdateEntry(entry)}>
 														<Edit />
 													</IconButton>
 												)}
@@ -74,6 +85,11 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 					</TableBody>
 				</Table>
 			</TableContainer>
+			{isOpen && (
+				<Modal title='Редактировать запись' isOpen={isOpen} setIsOpen={setIsOpen}>
+					<FormJournal setIsOpen={setIsOpen} id={userId} initialValues={currentEntry} />
+				</Modal>
+			)}
 		</Paper>
 	)
 }

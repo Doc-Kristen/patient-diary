@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { TextField, Stack, Button, Alert } from '@mui/material'
-import { createJournalEntry, fetchUser } from '@store/userData/asyncActions'
+import { createJournalEntry, fetchUser, updateJournalEntry } from '@store/userData/asyncActions'
 import { useAppDispatch } from '@store/store'
 import { HealthEntry } from 'types/HealthJournal'
 import { FormFields, Status, validationMessages } from '@helpers/const'
@@ -13,10 +13,11 @@ import { isDateValid } from '@helpers/utils'
 type FormJournalProps = {
 	setIsOpen: (arg: boolean) => void
 	id: string
+	initialValues?: HealthEntry
 }
 
 // форма для новой записи
-const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
+const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id, initialValues }) => {
 	const dispatch = useAppDispatch()
 
 	const date = dayjs().format('YYYY-MM-DDTHH:mm')
@@ -68,8 +69,14 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
 		formData.diastolic = +formData.diastolic
 		formData.heartRate = +formData.heartRate
 
-		const response = await dispatch(createJournalEntry(formData))
-		if (createJournalEntry.fulfilled.match(response)) {
+		// выбор сценария запроса в зависимости от цели (редактирование, создание новой записи)
+		const asyncAction  = initialValues ? updateJournalEntry : createJournalEntry
+		const saveAction  = initialValues
+			? updateJournalEntry({ ...formData, id: initialValues.id })
+			: createJournalEntry(formData)
+
+		const response = await dispatch(saveAction )
+		if (asyncAction .fulfilled.match(response)) {
 			dispatch(fetchUser(id))
 			setIsOpen(false)
 		} else {
@@ -94,35 +101,70 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id }) => {
 							validDate: value => isDateValid(value) || 'Дата не может быть в будущем',
 						},
 					},
-					date,
+					initialValues?.datetime?.toString() || date,
 				)}
-				{renderTextField(FormFields.SYSTOLIC, 'АД сист.', 'number', FormFields.SYSTOLIC, {
-					min: {
-						value: 0,
-						message: validationMessages.greaterThanZero,
+				{renderTextField(
+					FormFields.SYSTOLIC,
+					'АД сист.',
+					'number',
+					FormFields.SYSTOLIC,
+					{
+						min: {
+							value: 0,
+							message: validationMessages.greaterThanZero,
+						},
+						required: validationMessages.requiredField,
 					},
-					required: validationMessages.requiredField,
-				})}
-				{renderTextField(FormFields.DIASTOLIC, 'АД диаст.', 'number', FormFields.DIASTOLIC, {
-					min: {
-						value: 0,
-						message: validationMessages.greaterThanZero,
+					initialValues?.systolic.toString() || '',
+				)}
+				{renderTextField(
+					FormFields.DIASTOLIC,
+					'АД диаст.',
+					'number',
+					FormFields.DIASTOLIC,
+					{
+						min: {
+							value: 0,
+							message: validationMessages.greaterThanZero,
+						},
+						required: validationMessages.requiredField,
 					},
-					required: validationMessages.requiredField,
-				})}
-				{renderTextField(FormFields.HEART_RATE, 'ЧСС', 'number', FormFields.HEART_RATE, {
-					min: {
-						value: 0,
-						message: validationMessages.greaterThanZero,
+					initialValues?.diastolic.toString() || '',
+				)}
+				{renderTextField(
+					FormFields.HEART_RATE,
+					'ЧСС',
+					'number',
+					FormFields.HEART_RATE,
+					{
+						min: {
+							value: 0,
+							message: validationMessages.greaterThanZero,
+						},
+						required: validationMessages.requiredField,
 					},
-					required: validationMessages.requiredField,
-				})}
-				{renderTextField(FormFields.COMPLAINTS, 'Жалобы', 'text', FormFields.COMPLAINTS, {
-					minLength: { value: 4, message: validationMessages.minLengthError },
-				})}
-				{renderTextField(FormFields.MEDICATIONS, 'Лекарства', 'text', FormFields.MEDICATIONS, {
-					minLength: { value: 4, message: validationMessages.minLengthError },
-				})}
+					initialValues?.heartRate.toString() || '',
+				)}
+				{renderTextField(
+					FormFields.COMPLAINTS,
+					'Жалобы',
+					'text',
+					FormFields.COMPLAINTS,
+					{
+						minLength: { value: 4, message: validationMessages.minLengthError },
+					},
+					initialValues?.complaints || '',
+				)}
+				{renderTextField(
+					FormFields.MEDICATIONS,
+					'Лекарства',
+					'text',
+					FormFields.MEDICATIONS,
+					{
+						minLength: { value: 4, message: validationMessages.minLengthError },
+					},
+					initialValues?.medications || '',
+				)}
 			</Stack>
 			<Button type='submit' disabled={isDisabledForm} sx={{ alignSelf: 'end', margin: '5px' }}>
 				{entryStatus === Status.PENDING ? 'Сохранение...' : 'Сохранить'}
