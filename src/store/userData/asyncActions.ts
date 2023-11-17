@@ -32,7 +32,6 @@ export const deleteJournalEntry = createAsyncThunk<ServerMessage, string>(
 export const updateJournalEntry = createAsyncThunk<HealthEntry, HealthEntry>(
 	'journal/deleteJournalEntry',
 	async entryData => {
-		console.log(entryData)
 		const { data } = await api.patch<HealthEntry>(`/journal/${entryData.id}`, entryData)
 		return data
 	},
