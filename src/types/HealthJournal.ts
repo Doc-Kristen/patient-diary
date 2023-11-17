@@ -15,10 +15,6 @@ export type HealthJournalProps = {
 	healthData: HealthEntry[]
 }
 
-export type HealthEntryDelete = {
-	journalId: number
-}
-
 export interface IColumn {
 	id: string
 	label: string
