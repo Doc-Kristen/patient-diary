@@ -1,3 +1,5 @@
+import { IColumn } from "types/HealthJournal"
+
 enum AppRoute {
 	Main = '/',
 	Patient = 'patient/:id',
@@ -36,4 +38,32 @@ const validationMessages = {
 const emailPattern = /^\S+@\S+$/i
 const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
 
-export { AppRoute, Status, FormFields, validationMessages, emailPattern, passwordPattern }
+const columns: readonly IColumn[] = [
+	{ id: 'datetime', label: 'Дата' },
+	{
+		id: 'bloodPressure',
+		label: 'АД (мм.рт.ст)',
+	},
+	{
+		id: 'heartRate',
+		label: 'ЧСС (уд/мин)',
+	},
+	{
+		id: 'complaints',
+		label: 'Жалобы',
+	},
+	{
+		id: 'medications',
+		label: 'Препараты',
+	},
+	{
+		id: 'edit',
+		label: 'Редактировать',
+	},
+	{
+		id: 'delete',
+		label: 'Удалить',
+	},
+]
+
+export { AppRoute, Status, FormFields, validationMessages, emailPattern, passwordPattern, columns }

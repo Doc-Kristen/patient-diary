@@ -7,47 +7,14 @@ import {
 	TableCell,
 	TableContainer,
 	TableHead,
-	TablePagination,
 	TableRow,
+	IconButton,
 } from '@mui/material'
+import { Edit, Delete } from '@mui/icons-material'
 import { HealthJournalProps } from 'types/HealthJournal'
-
-interface Column {
-	id: string
-	label: string
-	minWidth?: number
-	align?: 'center'
-}
-
-const columns: readonly Column[] = [
-	{ id: 'datetime', label: 'Дата' },
-	{
-		id: 'bloodPressure',
-		label: 'АД (мм.рт.ст)',
-	},
-	{
-		id: 'heartRate',
-		label: 'ЧСС (уд/мин)',
-	},
-	{
-		id: 'complaints',
-		label: 'Жалобы',
-	},
-]
+import { columns } from '@helpers/const'
 
 const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
-	const [page, setPage] = React.useState(0)
-	const [rowsPerPage, setRowsPerPage] = React.useState(10)
-
-	const handleChangePage = (_event: unknown, newPage: number) => {
-		setPage(newPage)
-	}
-
-	const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setRowsPerPage(+event.target.value)
-		setPage(0)
-	}
-
 	return (
 		<Paper sx={{ width: '100%', overflow: 'hidden' }}>
 			<TableContainer sx={{ maxHeight: 440 }}>
@@ -66,35 +33,36 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{healthData
-							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-							.map((row, index) => {
-								return (
-									<TableRow hover role='checkbox' tabIndex={-1} key={index}>
-										{columns.map(column => {
-											const isbloodPressure = column.id === 'bloodPressure'
-											const formatedBloodPressure = `${row.systolic} / ${row.diastolic}`
-											const value = isbloodPressure
-												? formatedBloodPressure
+						{healthData.slice().map((row, index) => {
+							return (
+								<TableRow hover role='checkbox' tabIndex={-1} key={index}>
+									{columns.map(column => {
+										const value =
+											column.id === 'bloodPressure'
+												? `${row.systolic} / ${row.diastolic}`
 												: (row[column.id] as string)
-											return <TableCell key={column.id}>{value}</TableCell>
-										})}
-									</TableRow>
-								)
-							})}
+										return (
+											<TableCell key={column.id} sx={{ textAlign: 'left' }}>
+												{column.id === 'edit' && (
+													<IconButton>
+														<Edit />
+													</IconButton>
+												)}
+												{column.id === 'delete' && (
+													<IconButton>
+														<Delete />
+													</IconButton>
+												)}
+												{column.id !== 'edit' && column.id !== 'delete' && value}
+											</TableCell>
+										)
+									})}
+								</TableRow>
+							)
+						})}
 					</TableBody>
 				</Table>
 			</TableContainer>
-			<TablePagination
-				rowsPerPageOptions={[10, 25, 100]}
-				component='div'
-				count={healthData.length}
-				rowsPerPage={rowsPerPage}
-				page={page}
-				onPageChange={handleChangePage}
-				onRowsPerPageChange={handleChangeRowsPerPage}
-				labelRowsPerPage={'Выводить по:'}
-			/>
 		</Paper>
 	)
 }
