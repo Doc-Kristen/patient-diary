@@ -1,4 +1,4 @@
-import { IColumn } from "types/HealthJournal"
+import { IColumn } from 'types/HealthJournal'
 
 enum AppRoute {
 	Main = '/',
@@ -49,12 +49,12 @@ const columns: readonly IColumn[] = [
 		label: 'ЧСС (уд/мин)',
 	},
 	{
-		id: 'complaints',
-		label: 'Жалобы',
-	},
-	{
 		id: 'medications',
 		label: 'Препараты',
+	},
+	{
+		id: 'complaints',
+		label: 'Жалобы',
 	},
 	{
 		id: 'edit',

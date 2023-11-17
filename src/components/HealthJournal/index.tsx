@@ -1,5 +1,5 @@
 import * as React from 'react'
-
+import { useParams } from 'react-router-dom'
 import {
 	Paper,
 	Table,
@@ -13,8 +13,19 @@ import {
 import { Edit, Delete } from '@mui/icons-material'
 import { HealthJournalProps } from 'types/HealthJournal'
 import { columns } from '@helpers/const'
+import { useAppDispatch } from '@store/store'
+import { deleteJournalEntry, fetchUser } from '@store/userData/asyncActions'
 
 const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
+	const dispatch = useAppDispatch()
+	const { id } = useParams()
+	const userId = id || ''
+
+	const onDeleteEntry = async (rowId: string) => {
+		await dispatch(deleteJournalEntry(rowId))
+		dispatch(fetchUser(userId))
+	}
+
 	return (
 		<Paper sx={{ width: '100%', overflow: 'hidden' }}>
 			<TableContainer sx={{ maxHeight: 440 }}>
@@ -33,14 +44,14 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{healthData.slice().map((row, index) => {
+						{healthData.slice().map((entry, index) => {
 							return (
 								<TableRow hover role='checkbox' tabIndex={-1} key={index}>
 									{columns.map(column => {
 										const value =
 											column.id === 'bloodPressure'
-												? `${row.systolic} / ${row.diastolic}`
-												: (row[column.id] as string)
+												? `${entry.systolic} / ${entry.diastolic}`
+												: (entry[column.id] as string)
 										return (
 											<TableCell key={column.id} sx={{ textAlign: 'left' }}>
 												{column.id === 'edit' && (
@@ -49,7 +60,7 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 													</IconButton>
 												)}
 												{column.id === 'delete' && (
-													<IconButton>
+													<IconButton onClick={() => onDeleteEntry(entry.id)}>
 														<Delete />
 													</IconButton>
 												)}

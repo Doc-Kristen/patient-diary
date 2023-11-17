@@ -20,11 +20,10 @@ export const createJournalEntry = createAsyncThunk<HealthEntry, HealthEntry>(
 )
 
 // Добавление новой записи в журнал
-export const deleteJournalEntry = createAsyncThunk<ServerMessage, number>(
+export const deleteJournalEntry = createAsyncThunk<ServerMessage, string>(
 	'journal/deleteJournalEntry',
-	async (journalId: number) => {
-		const { data } = await api.get<ServerMessage>(`/journal/${journalId}`)
-		console.log(data)
+	async (journalId: string) => {
+		const { data } = await api.delete<ServerMessage>(`/journal/${journalId}`)
 		return data
 	},
 )
