@@ -31,7 +31,7 @@ const validationMessages = {
 	futureDateError: 'Дата не может быть в будущем',
 	passwordRequirements:
 		'Пароль должен содержать минимум 8 символов, включая заглавные буквы, строчные буквы и цифры.',
-	minLengthError: 'Не меньше 3 символов',
+	maxLengthError: 'Не более 500 символов',
 	greaterThanZero: 'Введите значение больше 0',
 }
 

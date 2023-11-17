@@ -151,7 +151,7 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id, initialValues 
 					'text',
 					FormFields.COMPLAINTS,
 					{
-						minLength: { value: 4, message: validationMessages.minLengthError },
+						maxLength: { value: 500, message: validationMessages.maxLengthError },
 					},
 					initialValues?.complaints || '',
 				)}
@@ -161,7 +161,7 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id, initialValues 
 					'text',
 					FormFields.MEDICATIONS,
 					{
-						minLength: { value: 4, message: validationMessages.minLengthError },
+						maxLength: { value: 500, message: validationMessages.maxLengthError },
 					},
 					initialValues?.medications || '',
 				)}
