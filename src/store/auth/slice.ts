@@ -1,17 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { login, registration } from './asyncActions'
+import { checkAuth, login, registration } from './asyncActions'
 import { UserAuth } from 'types/User'
+import { Status } from '@helpers/const'
 
-interface userState {
+interface IUserState {
 	isAuth: boolean
 	userData: UserAuth | null
 	isError: boolean
+	authStatus: Status
 }
 
-const initialState: userState = {
+const initialState: IUserState = {
 	isAuth: false,
 	userData: null,
 	isError: false,
+	authStatus: Status.PENDING,
 }
 
 const authSlice = createSlice({
@@ -52,6 +55,20 @@ const authSlice = createSlice({
 		builder.addCase(registration.rejected, state => {
 			state.isAuth = false
 			state.isError = true
+		})
+		builder.addCase(checkAuth.fulfilled, (state, action) => {
+			state.isAuth = action.payload.isAuthenticated
+			state.isError = false
+			state.authStatus = Status.SUCCESS
+		})
+		builder.addCase(checkAuth.pending, state => {
+			state.isError = false
+			state.authStatus = Status.PENDING
+		})
+		builder.addCase(checkAuth.rejected, state => {
+			state.isAuth = false
+			state.isError = true
+			state.authStatus = Status.ERROR
 		})
 	},
 })

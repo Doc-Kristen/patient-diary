@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import api from '@services/api'
-import { User, UserAuth, UserSignIn } from 'types/User'
+import { AuthResponse, User, UserAuth, UserSignIn } from 'types/User'
 
 // Авторизация пользователя
 export const login = createAsyncThunk<UserAuth, UserSignIn>('auth/login', async userData => {
@@ -16,3 +16,9 @@ export const registration = createAsyncThunk<UserAuth, User>(
 		return data
 	},
 )
+
+// Проверка статуса авторизации пользователя
+export const checkAuth = createAsyncThunk<AuthResponse>('auth/checkAuth', async () => {
+	const { data } = await api.get<AuthResponse>('/auth/login')
+	return data
+})

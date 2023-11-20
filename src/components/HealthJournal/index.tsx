@@ -32,7 +32,6 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 	}
 
 	const onUpdateEntry = (entry: HealthEntry) => {
-		console.log(entry)
 		setIsOpen(true)
 		setcurrentEntry(entry)
 	}

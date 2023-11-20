@@ -27,3 +27,11 @@ export type UserAuth = {
 	accessToken: string
 	userId: number
 }
+
+export type ServerMessage = {
+	message: string
+}
+
+export type AuthResponse = {
+	isAuthenticated: true
+}
