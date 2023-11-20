@@ -1,8 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { HealthEntry } from 'types/HealthJournal'
 import api from '@services/api'
-import { UserData } from 'types/User'
-import { ServerMessage } from 'types/Server'
+import { ServerMessage, UserData } from 'types/User'
 
 // Запрос данных пользователя по id
 export const fetchUser = createAsyncThunk<UserData, string>('userData/fetchUser', async userId => {

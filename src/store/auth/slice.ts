@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { checkAuth, login, registration } from './asyncActions'
+import { checkAuth, login, logout, registration } from './asyncActions'
 import { UserAuth } from 'types/User'
 import { Status } from '@helpers/const'
+import { dropToken, saveToken } from '@services/token'
 
 interface IUserState {
 	isAuth: boolean
@@ -35,7 +36,7 @@ const authSlice = createSlice({
 		})
 		builder.addCase(login.fulfilled, (state, action) => {
 			state.userData = action.payload
-			localStorage.setItem('token', action.payload.accessToken)
+			saveToken(action.payload.accessToken)
 			state.isAuth = true
 			state.isError = false
 		})
@@ -48,7 +49,7 @@ const authSlice = createSlice({
 		})
 		builder.addCase(registration.fulfilled, (state, action) => {
 			state.userData = action.payload
-			localStorage.setItem('token', action.payload.accessToken)
+			saveToken(action.payload.accessToken)
 			state.isAuth = true
 			state.isError = false
 		})
@@ -69,6 +70,20 @@ const authSlice = createSlice({
 			state.isAuth = false
 			state.isError = true
 			state.authStatus = Status.ERROR
+		})
+		builder.addCase(logout.fulfilled, state => {
+			dropToken()
+			state.isAuth = false
+			state.isError = false
+			state.authStatus = Status.SUCCESS
+		})
+		builder.addCase(logout.pending, state => {
+			state.isError = false
+			state.authStatus = Status.PENDING
+		})
+		builder.addCase(logout.rejected, state => {
+			state.isError = true
+			state.authStatus = Status.SUCCESS
 		})
 	},
 })
