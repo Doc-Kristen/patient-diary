@@ -1,13 +1,24 @@
 import React from 'react'
-import { Box, Grid, TextField, CssBaseline, Button, Typography, Container } from '@mui/material'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import {
+	Box,
+	Grid,
+	TextField,
+	CssBaseline,
+	Button,
+	Typography,
+	Container,
+	InputAdornment,
+	IconButton,
+} from '@mui/material'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { User } from 'types/User'
 import { AppRoute, Status, emailPattern, passwordPattern, validationMessages } from '@helpers/const'
 import { isDateValid } from '@helpers/utils'
-import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@store/store'
 import { registration } from '@store/auth/asyncActions'
-import { useSelector } from 'react-redux'
 import { selectAuthStatus, selectUserId } from '@store/auth/selectors'
 
 const SignUp: React.FC = () => {
@@ -22,6 +33,8 @@ const SignUp: React.FC = () => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm<User>()
+
+	const [showPassword, setShowPassword] = React.useState<boolean>(false)
 
 	const getErrorSettings = (fieldName: keyof User) => {
 		const error: boolean = !!errors[fieldName]
@@ -126,7 +139,7 @@ const SignUp: React.FC = () => {
 								required
 								fullWidth
 								label='Пароль'
-								type='password'
+								type={showPassword ? 'text' : 'password'}
 								id='password'
 								autoComplete='new-password'
 								{...register('password', {
@@ -139,6 +152,18 @@ const SignUp: React.FC = () => {
 								disabled={isDisabledForm}
 								{...getErrorSettings('password')}
 								helperText='Минимум 8 символов, включая цифру, заглавную и строчную латинскую букву'
+								InputProps={{
+									endAdornment: (
+										<InputAdornment position='end'>
+											<IconButton
+												aria-label='toggle password visibility'
+												onClick={() => setShowPassword(!showPassword)}
+												edge='end'>
+												{showPassword ? <Visibility /> : <VisibilityOff />}
+											</IconButton>
+										</InputAdornment>
+									),
+								}}
 							/>
 						</Grid>
 					</Grid>
