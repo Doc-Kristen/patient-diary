@@ -8,14 +8,14 @@ interface IUserState {
 	isAuth: boolean
 	userData: UserAuth | null
 	isError: boolean
-	authStatus: Status
+	authStatus: Status | null
 }
 
 const initialState: IUserState = {
 	isAuth: false,
 	userData: null,
 	isError: false,
-	authStatus: Status.PENDING,
+	authStatus: null,
 }
 
 const authSlice = createSlice({
@@ -33,29 +33,35 @@ const authSlice = createSlice({
 		builder.addCase(login.pending, state => {
 			state.isAuth = false
 			state.isError = false
+			state.authStatus = Status.PENDING
 		})
 		builder.addCase(login.fulfilled, (state, action) => {
 			state.userData = action.payload
 			saveToken(action.payload.accessToken)
 			state.isAuth = true
 			state.isError = false
+			state.authStatus = Status.SUCCESS
 		})
 		builder.addCase(login.rejected, state => {
 			state.isAuth = false
 			state.isError = true
+			state.authStatus = Status.ERROR
 		})
 		builder.addCase(registration.pending, state => {
 			state.isAuth = false
+			state.authStatus = Status.PENDING
 		})
 		builder.addCase(registration.fulfilled, (state, action) => {
 			state.userData = action.payload
 			saveToken(action.payload.accessToken)
 			state.isAuth = true
 			state.isError = false
+			state.authStatus = Status.SUCCESS
 		})
 		builder.addCase(registration.rejected, state => {
 			state.isAuth = false
 			state.isError = true
+			state.authStatus = Status.ERROR
 		})
 		builder.addCase(checkAuth.fulfilled, (state, action) => {
 			state.isAuth = action.payload.isAuthenticated

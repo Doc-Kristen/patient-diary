@@ -15,10 +15,10 @@ import MonitorHeart from '@mui/icons-material/MonitorHeart'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { UserSignIn } from 'types/User'
 import { Link, useNavigate } from 'react-router-dom'
-import { AppRoute, emailPattern, validationMessages } from '@helpers/const'
+import { AppRoute, Status, emailPattern, validationMessages } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { login } from '@store/auth/asyncActions'
-import { selectUserId } from '@store/auth/selectors'
+import { selectAuthStatus, selectUserId } from '@store/auth/selectors'
 import { useSelector } from 'react-redux'
 
 const SignIn: React.FC = () => {
@@ -26,6 +26,9 @@ const SignIn: React.FC = () => {
 	const navigate = useNavigate()
 
 	const userId = useSelector(selectUserId)
+	const authStatus = useSelector(selectAuthStatus)
+	const isDisabledForm = authStatus === Status.PENDING
+
 	const {
 		register,
 		handleSubmit,
@@ -44,7 +47,7 @@ const SignIn: React.FC = () => {
 
 	React.useEffect(() => {
 		if (userId) {
-			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя, если авторизован
+			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя, если авторизация прошла успешно
 		}
 	}, [userId, navigate])
 
@@ -80,6 +83,7 @@ const SignIn: React.FC = () => {
 								message: validationMessages.invalidEmail,
 							},
 						})}
+						disabled={isDisabledForm}
 						{...getErrorSettings('email')}
 					/>
 					<TextField
@@ -93,14 +97,21 @@ const SignIn: React.FC = () => {
 						{...register('password', {
 							required: validationMessages.requiredField,
 						})}
+						disabled={isDisabledForm}
 						{...getErrorSettings('password')}
 					/>
 					<FormControlLabel
 						control={<Checkbox color='primary' {...register('remember')} />}
 						label='Запомнить пароль'
+						disabled={isDisabledForm}
 					/>
-					<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-						Войти
+					<Button
+						type='submit'
+						fullWidth
+						variant='contained'
+						disabled={isDisabledForm}
+						sx={{ mt: 3, mb: 2 }}>
+						{authStatus === Status.PENDING ? 'Вход...' : 'Войти'}
 					</Button>
 					<Grid container>
 						<Grid item xs>
