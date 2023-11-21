@@ -106,6 +106,10 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id, initialValues 
 							value: 0,
 							message: validationMessages.greaterThanZero,
 						},
+						max: {
+							value: 500,
+							message: validationMessages.maxNumberError,
+						},
 						required: validationMessages.requiredField,
 					},
 					initialValues?.systolic.toString() || '',
@@ -120,6 +124,10 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id, initialValues 
 							value: 0,
 							message: validationMessages.greaterThanZero,
 						},
+						max: {
+							value: 500,
+							message: validationMessages.maxNumberError,
+						},
 						required: validationMessages.requiredField,
 					},
 					initialValues?.diastolic.toString() || '',
@@ -133,6 +141,10 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id, initialValues 
 						min: {
 							value: 0,
 							message: validationMessages.greaterThanZero,
+						},
+						max: {
+							value: 500,
+							message: validationMessages.maxNumberError,
 						},
 						required: validationMessages.requiredField,
 					},

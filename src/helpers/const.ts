@@ -32,6 +32,7 @@ const validationMessages = {
 	passwordRequirements:
 		'Пароль должен содержать минимум 8 символов, включая заглавные буквы, строчные буквы и цифры.',
 	maxLengthError: 'Не более 500 символов',
+	maxNumberError: 'Не более 500',
 	greaterThanZero: 'Введите значение больше 0',
 }
 
