@@ -138,6 +138,7 @@ const SignUp: React.FC = () => {
 								})}
 								disabled={isDisabledForm}
 								{...getErrorSettings('password')}
+								helperText='Минимум 8 символов, включая цифру, заглавную и строчную латинскую букву'
 							/>
 						</Grid>
 					</Grid>
