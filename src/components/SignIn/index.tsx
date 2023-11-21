@@ -1,4 +1,7 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import {
 	Container,
 	Avatar,
@@ -10,16 +13,16 @@ import {
 	Grid,
 	Box,
 	Typography,
+	InputAdornment,
+	IconButton,
 } from '@mui/material'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 import MonitorHeart from '@mui/icons-material/MonitorHeart'
-import { SubmitHandler, useForm } from 'react-hook-form'
 import { UserSignIn } from 'types/User'
-import { Link, useNavigate } from 'react-router-dom'
 import { AppRoute, Status, emailPattern, validationMessages } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { login } from '@store/auth/asyncActions'
 import { selectAuthStatus, selectUserId } from '@store/auth/selectors'
-import { useSelector } from 'react-redux'
 
 const SignIn: React.FC = () => {
 	const dispatch = useAppDispatch()
@@ -28,6 +31,8 @@ const SignIn: React.FC = () => {
 	const userId = useSelector(selectUserId)
 	const authStatus = useSelector(selectAuthStatus)
 	const isDisabledForm = authStatus === Status.PENDING
+
+	const [showPassword, setShowPassword] = React.useState<boolean>(false)
 
 	const {
 		register,
@@ -91,7 +96,7 @@ const SignIn: React.FC = () => {
 						required
 						fullWidth
 						label='Пароль'
-						type='password'
+						type={showPassword ? 'text' : 'password'}
 						id='password'
 						autoComplete='current-password'
 						{...register('password', {
@@ -99,6 +104,18 @@ const SignIn: React.FC = () => {
 						})}
 						disabled={isDisabledForm}
 						{...getErrorSettings('password')}
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position='end'>
+									<IconButton
+										aria-label='toggle password visibility'
+										onClick={() => setShowPassword(!showPassword)}
+										edge='end'>
+										{showPassword ? <Visibility /> : <VisibilityOff />}
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
 					/>
 					<FormControlLabel
 						control={<Checkbox color='primary' {...register('remember')} />}
