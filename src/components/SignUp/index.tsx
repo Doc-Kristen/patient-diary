@@ -2,19 +2,21 @@ import React from 'react'
 import { Box, Grid, TextField, CssBaseline, Button, Typography, Container } from '@mui/material'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { User } from 'types/User'
-import { AppRoute, emailPattern, passwordPattern, validationMessages } from '@helpers/const'
+import { AppRoute, Status, emailPattern, passwordPattern, validationMessages } from '@helpers/const'
 import { isDateValid } from '@helpers/utils'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@store/store'
 import { registration } from '@store/auth/asyncActions'
 import { useSelector } from 'react-redux'
-import { selectUserId } from '@store/auth/selectors'
+import { selectAuthStatus, selectUserId } from '@store/auth/selectors'
 
 const SignUp: React.FC = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
 
 	const userId = useSelector(selectUserId)
+	const authStatus = useSelector(selectAuthStatus)
+	const isDisabledForm = authStatus === Status.PENDING
 	const {
 		register,
 		handleSubmit,
@@ -63,6 +65,7 @@ const SignUp: React.FC = () => {
 									minLength: { value: 1, message: 'Не меньше 1 символa' },
 									maxLength: { value: 30, message: 'Не больше 30 символов' },
 								})}
+								disabled={isDisabledForm}
 								{...getErrorSettings('firstName')}
 								autoFocus
 							/>
@@ -77,6 +80,7 @@ const SignUp: React.FC = () => {
 									minLength: { value: 1, message: 'Не меньше 1 символа' },
 									maxLength: { value: 30, message: 'Не больше 30 символов' },
 								})}
+								disabled={isDisabledForm}
 								{...getErrorSettings('lastName')}
 							/>
 						</Grid>
@@ -95,6 +99,7 @@ const SignUp: React.FC = () => {
 											value ? isDateValid(value) || 'Дата не может быть в будущем' : true,
 									},
 								})}
+								disabled={isDisabledForm}
 								{...getErrorSettings('birthday')}
 							/>
 						</Grid>
@@ -112,6 +117,7 @@ const SignUp: React.FC = () => {
 										message: validationMessages.invalidEmail,
 									},
 								})}
+								disabled={isDisabledForm}
 								{...getErrorSettings('email')}
 							/>
 						</Grid>
@@ -130,12 +136,18 @@ const SignUp: React.FC = () => {
 										message: validationMessages.passwordRequirements,
 									},
 								})}
+								disabled={isDisabledForm}
 								{...getErrorSettings('password')}
 							/>
 						</Grid>
 					</Grid>
-					<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-						Зарегистрироваться
+					<Button
+						type='submit'
+						disabled={isDisabledForm}
+						fullWidth
+						variant='contained'
+						sx={{ mt: 3, mb: 2 }}>
+						{authStatus === Status.PENDING ? 'Отправка данных...' : 'Зарегистрироваться'}
 					</Button>
 					<Grid container justifyContent='flex-end'>
 						<Grid item>
