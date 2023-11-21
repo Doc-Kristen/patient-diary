@@ -1,15 +1,5 @@
 import React from 'react'
-import {
-	Box,
-	Grid,
-	TextField,
-	CssBaseline,
-	Button,
-	Typography,
-	Container,
-	Alert,
-	Snackbar,
-} from '@mui/material'
+import { Box, Grid, TextField, CssBaseline, Button, Typography, Container } from '@mui/material'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { User } from 'types/User'
 import { AppRoute, emailPattern, passwordPattern, validationMessages } from '@helpers/const'
@@ -18,14 +8,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@store/store'
 import { registration } from '@store/auth/asyncActions'
 import { useSelector } from 'react-redux'
-import { selectIsError, selectUserId } from '@store/auth/selectors'
-import { setErrorStatus } from '@store/auth/slice'
+import { selectUserId } from '@store/auth/selectors'
 
 const SignUp: React.FC = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
-	const autoHideDuration = 3000 // время, через которое скрывается сообщение в случае ошибки
-	const isError = useSelector(selectIsError)
 
 	const userId = useSelector(selectUserId)
 	const {
@@ -150,12 +137,6 @@ const SignUp: React.FC = () => {
 					<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
 						Зарегистрироваться
 					</Button>
-					<Snackbar
-						open={isError}
-						autoHideDuration={autoHideDuration}
-						onClose={() => dispatch(setErrorStatus(false))}>
-						<Alert severity='error'>Не удалось зарегистрироваться</Alert>
-					</Snackbar>
 					<Grid container justifyContent='flex-end'>
 						<Grid item>
 							<Link to={AppRoute.Login}>Уже зарегистрированы? Войти</Link>

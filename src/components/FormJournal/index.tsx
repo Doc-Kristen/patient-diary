@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
-import { TextField, Stack, Button, Alert } from '@mui/material'
+import { TextField, Stack, Button } from '@mui/material'
 import { createJournalEntry, fetchUser, updateJournalEntry } from '@store/userData/asyncActions'
 import { useAppDispatch } from '@store/store'
 import { HealthEntry } from 'types/HealthJournal'
@@ -21,8 +21,6 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id, initialValues 
 	const dispatch = useAppDispatch()
 
 	const date = dayjs().format('YYYY-MM-DDTHH:mm')
-
-	const [isError, setIsError] = React.useState(false)
 
 	const entryStatus = useSelector(selectEntryStatus)
 	const isDisabledForm = entryStatus === Status.PENDING
@@ -70,20 +68,15 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id, initialValues 
 		formData.heartRate = +formData.heartRate
 
 		// выбор сценария запроса в зависимости от цели (редактирование, создание новой записи)
-		const asyncAction  = initialValues ? updateJournalEntry : createJournalEntry
-		const saveAction  = initialValues
+		const asyncAction = initialValues ? updateJournalEntry : createJournalEntry
+		const saveAction = initialValues
 			? updateJournalEntry({ ...formData, id: initialValues.id })
 			: createJournalEntry(formData)
 
-		const response = await dispatch(saveAction )
-		if (asyncAction .fulfilled.match(response)) {
+		const response = await dispatch(saveAction)
+		if (asyncAction.fulfilled.match(response)) {
 			dispatch(fetchUser(id))
 			setIsOpen(false)
-		} else {
-			setIsError(true) // показ сообщения об ошибке
-			setTimeout(() => {
-				setIsError(false)
-			}, 3000)
 		}
 	}
 
@@ -169,7 +162,6 @@ const FormJournal: React.FC<FormJournalProps> = ({ setIsOpen, id, initialValues 
 			<Button type='submit' disabled={isDisabledForm} sx={{ alignSelf: 'end', margin: '5px' }}>
 				{entryStatus === Status.PENDING ? 'Сохранение...' : 'Сохранить'}
 			</Button>
-			{isError && <Alert severity='error'>Ошибка. Данные не сохранены</Alert>}
 		</form>
 	)
 }

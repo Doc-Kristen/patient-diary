@@ -10,8 +10,6 @@ import {
 	Grid,
 	Box,
 	Typography,
-	Alert,
-	Snackbar,
 } from '@mui/material'
 import MonitorHeart from '@mui/icons-material/MonitorHeart'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -20,18 +18,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AppRoute, emailPattern, validationMessages } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { login } from '@store/auth/asyncActions'
-import { selectIsError, selectUserId } from '@store/auth/selectors'
+import { selectUserId } from '@store/auth/selectors'
 import { useSelector } from 'react-redux'
-import { setErrorStatus } from '@store/auth/slice'
 
 const SignIn: React.FC = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
-	const autoHideDuration = 3000 // время, через которое скрывается сообщение в случае ошибки
 
 	const userId = useSelector(selectUserId)
-	const isError = useSelector(selectIsError)
-
 	const {
 		register,
 		handleSubmit,
@@ -108,12 +102,6 @@ const SignIn: React.FC = () => {
 					<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
 						Войти
 					</Button>
-					<Snackbar
-						open={isError}
-						autoHideDuration={autoHideDuration}
-						onClose={() => dispatch(setErrorStatus(false))}>
-						<Alert severity='error'>Проверьте правильность логина и пароля</Alert>
-					</Snackbar>
 					<Grid container>
 						<Grid item xs>
 							<Link to='#'>Забыли пароль?</Link>
