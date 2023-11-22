@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, AppBar, Toolbar, Button, ListItem } from '@mui/material'
+import { Typography, AppBar, Toolbar, Button, ListItem, Box } from '@mui/material'
 import { selectIsAuth } from '@store/auth/selectors'
 import { useSelector } from 'react-redux'
 import UserMenu from '@components/UserMenu'
@@ -8,9 +8,10 @@ import { AppRoute } from '@helpers/const'
 
 const Header: React.FC = () => {
 	const navItems = [
-		{ title: 'Войти', url: AppRoute.Main },
+		{ title: 'Войти', url: AppRoute.Login },
 		{ title: 'Зарегистрироваться', url: AppRoute.Register },
 	]
+
 	const isAuth = useSelector(selectIsAuth)
 	return (
 		<AppBar position='fixed'>
@@ -21,15 +22,15 @@ const Header: React.FC = () => {
 				{isAuth ? (
 					<UserMenu />
 				) : (
-					<nav>
+					<Box component='nav' sx={{ display: 'flex', gap: '10px' }}>
 						{navItems.map(item => (
 							<ListItem key={item.title} disablePadding>
-								<Button component={Link} to={item.url} variant='contained' color='primary'>
+								<Button component={Link} to={item.url} variant='outlined' color='inherit'>
 									{item.title}
 								</Button>
 							</ListItem>
 						))}
-					</nav>
+					</Box>
 				)}
 			</Toolbar>
 		</AppBar>

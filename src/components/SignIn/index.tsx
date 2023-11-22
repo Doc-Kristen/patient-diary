@@ -22,7 +22,7 @@ import { UserSignIn } from 'types/User'
 import { AppRoute, Status, emailPattern, validationMessages } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { login } from '@store/auth/asyncActions'
-import { selectFetchStatus, selectUserId } from '@store/auth/selectors'
+import { selectFetchStatus, selectIsAuth, selectUserId } from '@store/auth/selectors'
 
 const SignIn: React.FC = () => {
 	const dispatch = useAppDispatch()
@@ -30,6 +30,7 @@ const SignIn: React.FC = () => {
 
 	const userId = useSelector(selectUserId)
 	const fetchStatus = useSelector(selectFetchStatus)
+	const isAuth = useSelector(selectIsAuth)
 	const isDisabledForm = fetchStatus === Status.PENDING
 
 	const [showPassword, setShowPassword] = React.useState<boolean>(false)
@@ -51,10 +52,10 @@ const SignIn: React.FC = () => {
 	}
 
 	React.useEffect(() => {
-		if (userId) {
+		if (userId && isAuth) {
 			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя, если авторизация прошла успешно
 		}
-	}, [userId, navigate])
+	}, [isAuth, navigate, userId])
 
 	return (
 		<Container component='main' maxWidth='xs'>

@@ -1,20 +1,29 @@
-import { AppRoute } from '@helpers/const'
+import { Status } from '@helpers/const'
 import { AccountCircle } from '@mui/icons-material'
 import { Box, Button, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { logout } from '@store/auth/asyncActions'
+import { selectFetchStatus } from '@store/auth/selectors'
+import { useAppDispatch } from '@store/store'
 import { selectUser } from '@store/userData/selectors'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 const UserMenu: React.FC = () => {
+	const dispatch = useAppDispatch()
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
-	const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+	const fetchStatus = useSelector(selectFetchStatus)
+
+	const onClickMenu = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget)
 	}
 
-	const handleClose = () => {
+	const onClose = () => {
 		setAnchorEl(null)
+	}
+
+	const onLogoutButton = () => {
+		dispatch(logout())
 	}
 
 	const { lastName, firstName, email } = useSelector(selectUser)
@@ -27,7 +36,7 @@ const UserMenu: React.FC = () => {
 				aria-label='account of current user'
 				aria-controls='menu-appbar'
 				aria-haspopup='true'
-				onClick={handleMenu}
+				onClick={onClickMenu}
 				color='inherit'>
 				<AccountCircle />
 			</IconButton>
@@ -44,13 +53,13 @@ const UserMenu: React.FC = () => {
 					horizontal: 'right',
 				}}
 				open={Boolean(anchorEl)}
-				onClose={handleClose}>
-				<MenuItem onClick={handleClose}>Профиль</MenuItem>
-				<MenuItem onClick={handleClose}>Настройки приложения</MenuItem>
+				onClose={onClose}>
+				<MenuItem onClick={onClose}>Профиль</MenuItem>
+				<MenuItem onClick={onClose}>Настройки приложения</MenuItem>
 			</Menu>
 			<Typography>Здравствуйте, {hasName || email}!</Typography>
-			<Button component={Link} to={AppRoute.Main} color='inherit'>
-				Выйти
+			<Button onClick={onLogoutButton} variant='outlined' color='inherit'>
+				{fetchStatus === Status.PENDING ? 'Выход из аккаунта...' : 'Выйти'}
 			</Button>
 		</Box>
 	)

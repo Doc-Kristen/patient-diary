@@ -19,7 +19,7 @@ import { AppRoute, Status, emailPattern, passwordPattern, validationMessages } f
 import { isDateValid } from '@helpers/utils'
 import { useAppDispatch } from '@store/store'
 import { registration } from '@store/auth/asyncActions'
-import { selectFetchStatus, selectUserId } from '@store/auth/selectors'
+import { selectFetchStatus, selectIsAuth, selectUserId } from '@store/auth/selectors'
 
 const SignUp: React.FC = () => {
 	const dispatch = useAppDispatch()
@@ -27,6 +27,7 @@ const SignUp: React.FC = () => {
 
 	const userId = useSelector(selectUserId)
 	const fetchStatus = useSelector(selectFetchStatus)
+	const isAuth = useSelector(selectIsAuth)
 	const isDisabledForm = fetchStatus === Status.PENDING
 	const {
 		register,
@@ -47,10 +48,10 @@ const SignUp: React.FC = () => {
 	}
 
 	React.useEffect(() => {
-		if (userId) {
+		if (userId && isAuth) {
 			navigate(`/patient/${userId}`) // перенаправление на страницу пользователя, если авторизован
 		}
-	}, [userId, navigate])
+	}, [isAuth, navigate, userId])
 
 	return (
 		<Container component='main' maxWidth='xs'>

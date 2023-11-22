@@ -25,5 +25,5 @@ export const checkAuth = createAsyncThunk<AuthResponse>('auth/checkAuth', async 
 
 // Выход из кабинета пользователя
 export const logout = createAsyncThunk<void>('auth/logout', async () => {
-	return await api.delete('/auth/login')
+	return await api.get('/auth/logout')
 })
