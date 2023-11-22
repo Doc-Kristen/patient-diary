@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { FormJournal, HealthJournal, Modal } from '@components/index'
+import { FormJournal, HealthJournal, Modal, Spinner } from '@components/index'
 import { Button, Container, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { selectJournal, selectDataStatus } from '@store/userData/selectors'
@@ -25,7 +25,7 @@ const Patient: React.FC = () => {
 	}, [dispatch, id, userId])
 
 	if (status === Status.PENDING) {
-		return <div>Loading...</div>
+		return <Spinner/>
 	}
 
 	if (status === Status.ERROR) {

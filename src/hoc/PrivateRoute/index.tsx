@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { selectAuthStatus, selectIsAuth } from '@store/auth/selectors'
 import { useAppDispatch } from '@store/store'
 import { checkAuth } from '@store/auth/asyncActions'
+import Spinner from '@components/Spinner'
 
 const PrivateRoute: React.FC = () => {
 	const dispatch = useAppDispatch()
@@ -16,7 +17,7 @@ const PrivateRoute: React.FC = () => {
 	}, [dispatch])
 
 	if (authStatus === Status.PENDING) {
-		return <div>Загрузка</div>
+		return <Spinner />
 	}
 
 	if (authStatus === Status.ERROR) {
