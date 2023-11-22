@@ -19,15 +19,15 @@ import { AppRoute, Status, emailPattern, passwordPattern, validationMessages } f
 import { isDateValid } from '@helpers/utils'
 import { useAppDispatch } from '@store/store'
 import { registration } from '@store/auth/asyncActions'
-import { selectAuthStatus, selectUserId } from '@store/auth/selectors'
+import { selectFetchStatus, selectUserId } from '@store/auth/selectors'
 
 const SignUp: React.FC = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
 
 	const userId = useSelector(selectUserId)
-	const authStatus = useSelector(selectAuthStatus)
-	const isDisabledForm = authStatus === Status.PENDING
+	const fetchStatus = useSelector(selectFetchStatus)
+	const isDisabledForm = fetchStatus === Status.PENDING
 	const {
 		register,
 		handleSubmit,
@@ -173,7 +173,7 @@ const SignUp: React.FC = () => {
 						fullWidth
 						variant='contained'
 						sx={{ mt: 3, mb: 2 }}>
-						{authStatus === Status.PENDING ? 'Отправка данных...' : 'Зарегистрироваться'}
+						{fetchStatus === Status.PENDING ? 'Отправка данных...' : 'Зарегистрироваться'}
 					</Button>
 					<Grid container justifyContent='flex-end'>
 						<Grid item>

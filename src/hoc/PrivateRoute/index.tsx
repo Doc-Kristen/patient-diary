@@ -23,7 +23,7 @@ const PrivateRoute: React.FC = () => {
 		return <div>Ошибка при загрузке данных</div>
 	}
 
-	return isAuth ? <Outlet /> : <Navigate to={AppRoute.Main} />
+	return isAuth && authStatus ? <Outlet /> : <Navigate to={AppRoute.Main} />
 }
 
 export default PrivateRoute

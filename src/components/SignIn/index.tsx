@@ -22,15 +22,15 @@ import { UserSignIn } from 'types/User'
 import { AppRoute, Status, emailPattern, validationMessages } from '@helpers/const'
 import { useAppDispatch } from '@store/store'
 import { login } from '@store/auth/asyncActions'
-import { selectAuthStatus, selectUserId } from '@store/auth/selectors'
+import { selectFetchStatus, selectUserId } from '@store/auth/selectors'
 
 const SignIn: React.FC = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
 
 	const userId = useSelector(selectUserId)
-	const authStatus = useSelector(selectAuthStatus)
-	const isDisabledForm = authStatus === Status.PENDING
+	const fetchStatus = useSelector(selectFetchStatus)
+	const isDisabledForm = fetchStatus === Status.PENDING
 
 	const [showPassword, setShowPassword] = React.useState<boolean>(false)
 
@@ -128,7 +128,7 @@ const SignIn: React.FC = () => {
 						variant='contained'
 						disabled={isDisabledForm}
 						sx={{ mt: 3, mb: 2 }}>
-						{authStatus === Status.PENDING ? 'Вход...' : 'Войти'}
+						{fetchStatus === Status.PENDING ? 'Вход...' : 'Войти'}
 					</Button>
 					<Grid container>
 						<Grid item xs>

@@ -8,14 +8,16 @@ interface IUserState {
 	isAuth: boolean
 	userData: UserAuth | null
 	isError: boolean
-	authStatus: Status | null
+	authStatus: Status
+	fetchStatus: Status | null
 }
 
 const initialState: IUserState = {
 	isAuth: false,
 	userData: null,
 	isError: false,
-	authStatus: null,
+	fetchStatus: null,
+	authStatus: Status.PENDING,
 }
 
 const authSlice = createSlice({
@@ -33,35 +35,35 @@ const authSlice = createSlice({
 		builder.addCase(login.pending, state => {
 			state.isAuth = false
 			state.isError = false
-			state.authStatus = Status.PENDING
+			state.fetchStatus = Status.PENDING
 		})
 		builder.addCase(login.fulfilled, (state, action) => {
 			state.userData = action.payload
 			saveToken(action.payload.accessToken)
 			state.isAuth = true
 			state.isError = false
-			state.authStatus = Status.SUCCESS
+			state.fetchStatus = Status.SUCCESS
 		})
 		builder.addCase(login.rejected, state => {
 			state.isAuth = false
 			state.isError = true
-			state.authStatus = Status.ERROR
+			state.fetchStatus = Status.ERROR
 		})
 		builder.addCase(registration.pending, state => {
 			state.isAuth = false
-			state.authStatus = Status.PENDING
+			state.fetchStatus = Status.PENDING
 		})
 		builder.addCase(registration.fulfilled, (state, action) => {
 			state.userData = action.payload
 			saveToken(action.payload.accessToken)
 			state.isAuth = true
 			state.isError = false
-			state.authStatus = Status.SUCCESS
+			state.fetchStatus = Status.SUCCESS
 		})
 		builder.addCase(registration.rejected, state => {
 			state.isAuth = false
 			state.isError = true
-			state.authStatus = Status.ERROR
+			state.fetchStatus = Status.ERROR
 		})
 		builder.addCase(checkAuth.fulfilled, (state, action) => {
 			state.isAuth = action.payload.isAuthenticated
@@ -81,15 +83,15 @@ const authSlice = createSlice({
 			dropToken()
 			state.isAuth = false
 			state.isError = false
-			state.authStatus = Status.SUCCESS
+			state.fetchStatus = Status.SUCCESS
 		})
 		builder.addCase(logout.pending, state => {
 			state.isError = false
-			state.authStatus = Status.PENDING
+			state.fetchStatus = Status.PENDING
 		})
 		builder.addCase(logout.rejected, state => {
 			state.isError = true
-			state.authStatus = Status.SUCCESS
+			state.fetchStatus = Status.ERROR
 		})
 	},
 })
