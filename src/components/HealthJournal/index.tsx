@@ -17,6 +17,7 @@ import { useAppDispatch } from '@store/store'
 import { deleteJournalEntry, fetchUser } from '@store/userData/asyncActions'
 import FormJournal from '@components/FormJournal'
 import Modal from '@components/Modal'
+import { formatDate } from '@helpers/utils'
 
 const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 	const dispatch = useAppDispatch()
@@ -58,10 +59,16 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 							return (
 								<TableRow hover role='checkbox' tabIndex={-1} key={index}>
 									{columns.map(column => {
-										const value =
-											column.id === 'bloodPressure'
-												? `${entry.systolic} / ${entry.diastolic}`
-												: (entry[column.id] as string)
+										const value = () => {
+											if (column.id === 'bloodPressure') {
+												return `${entry.systolic} / ${entry.diastolic}`
+											}
+											if (column.id === 'datetime') {
+												return `${formatDate(entry.datetime)}`
+											}
+											return entry[column.id] as string
+										}
+
 										return (
 											<TableCell key={column.id} sx={{ textAlign: 'left' }}>
 												{column.id === 'edit' && (
@@ -74,7 +81,7 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 														<Delete />
 													</IconButton>
 												)}
-												{column.id !== 'edit' && column.id !== 'delete' && value}
+												{column.id !== 'edit' && column.id !== 'delete' && value()}
 											</TableCell>
 										)
 									})}
