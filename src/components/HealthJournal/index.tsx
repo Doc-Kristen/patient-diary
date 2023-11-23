@@ -59,7 +59,7 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 			return formatDate(entry.datetime)
 		}
 		if (columnId === 'complaints' || columnId === 'medications') {
-			return entry.complaints ? (
+			return entry[columnId] ? (
 				<ActionIconButton
 					title='Есть запись, нажмите для просмотра'
 					icon={CheckCircleOutline}
