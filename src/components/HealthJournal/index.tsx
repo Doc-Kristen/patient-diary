@@ -27,6 +27,17 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 	const [isOpen, setIsOpen] = React.useState(false)
 	const [currentEntry, setcurrentEntry] = React.useState<HealthEntry>()
 
+	// Определяет формат, в котором будут показаны записи в колонках
+	const formatColumnValue = (columnId: string, entry: HealthEntry) => {
+		if (columnId === 'bloodPressure') {
+			return `${entry.systolic} / ${entry.diastolic}`
+		}
+		if (columnId === 'datetime') {
+			return formatDate(entry.datetime)
+		}
+		return entry[columnId] as string
+	}
+
 	const onDeleteEntry = async (rowId: string) => {
 		await dispatch(deleteJournalEntry(rowId))
 		dispatch(fetchUser(userId))
@@ -59,16 +70,6 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 							return (
 								<TableRow hover role='checkbox' tabIndex={-1} key={index}>
 									{columns.map(column => {
-										const value = () => {
-											if (column.id === 'bloodPressure') {
-												return `${entry.systolic} / ${entry.diastolic}`
-											}
-											if (column.id === 'datetime') {
-												return `${formatDate(entry.datetime)}`
-											}
-											return entry[column.id] as string
-										}
-
 										return (
 											<TableCell key={column.id} sx={{ textAlign: 'left' }}>
 												{column.id === 'edit' && (
@@ -81,7 +82,9 @@ const HealthJournal: React.FC<HealthJournalProps> = ({ healthData }) => {
 														<Delete />
 													</IconButton>
 												)}
-												{column.id !== 'edit' && column.id !== 'delete' && value()}
+												{column.id !== 'edit' &&
+													column.id !== 'delete' &&
+													formatColumnValue(column.id, entry)}
 											</TableCell>
 										)
 									})}
